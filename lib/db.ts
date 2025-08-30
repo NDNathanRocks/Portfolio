@@ -1,4 +1,6 @@
 // lib/db.ts
+import type { Pool } from "pg";
+
 export type Row = {
   id: string;
   title: string;
@@ -10,27 +12,30 @@ export type Row = {
 };
 
 const url = process.env.POSTGRES_URL || "";
-const isLocal = /localhost|127\.0\.0\.1/.test(url);
+const isLocal = /localhost|127\.0\.0\.1/i.test(url);
 const onVercel = process.env.VERCEL === "1";
 
-export async function getProjects(): Promise<Row[]> {
-  if (isLocal) {
-    // Local dev with pg over TCP
-    const { Pool } = await import("pg");
-    const pool = new Pool({ connectionString: url, ssl: false });
-    const res = await pool.query<Row>(`
-      SELECT
-        id, title, description, image_url, github_url, demo_url,
-        TO_CHAR(date, 'YYYY-MM-DD') AS date
-      FROM projects
-      ORDER BY date ASC;
-    `);
-    await pool.end();
-    return res.rows;
-  }
+/** Create/reuse a singleton pg Pool in dev to survive HMR */
+let _pool: Pool | undefined = (globalThis as any).__pg_pool;
 
+async function getPool(): Promise<Pool> {
+  if (_pool) return _pool;
+  const { Pool } = await import("pg");
+  _pool = new Pool({
+    connectionString: url,
+    ssl: isLocal ? false : { rejectUnauthorized: false },
+    max: 5,
+    idleTimeoutMillis: 10_000,
+  });
+  if (process.env.NODE_ENV !== "production") {
+    (globalThis as any).__pg_pool = _pool;
+  }
+  return _pool;
+}
+
+export async function getProjects(): Promise<Row[]> {
   if (onVercel) {
-    // Vercel: serverless driver
+    // Use Vercel Postgres serverless driver in production
     const { sql } = await import("@vercel/postgres");
     const { rows } = await sql<Row>`
       SELECT
@@ -42,9 +47,8 @@ export async function getProjects(): Promise<Row[]> {
     return rows;
   }
 
-  // Other environments (e.g., remote Neon from laptop with SSL)
-  const { Pool } = await import("pg");
-  const pool = new Pool({ connectionString: url, ssl: { rejectUnauthorized: false } });
+  // Local dev or other environments: use pg over TCP
+  const pool = await getPool();
   const res = await pool.query<Row>(`
     SELECT
       id, title, description, image_url, github_url, demo_url,
@@ -52,6 +56,5 @@ export async function getProjects(): Promise<Row[]> {
     FROM projects
     ORDER BY date ASC;
   `);
-  await pool.end();
   return res.rows;
 }
