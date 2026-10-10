@@ -18,6 +18,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      "scripts/clarity-demo/**", // source for the Expo build, not part of this app
+      "public/**", // vendored demo assets (OpenCV.js, ONNX runtime, exported Clarity app)
     ],
   },
 ];

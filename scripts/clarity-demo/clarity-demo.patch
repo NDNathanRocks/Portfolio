@@ -1,0 +1,104 @@
+diff --git a/frontend/app.json b/frontend/app.json
+index 1f26592..e37283b 100644
+--- a/frontend/app.json
++++ b/frontend/app.json
+@@ -55,7 +55,8 @@
+     ],
+     "experiments": {
+       "typedRoutes": true,
+-      "reactCompiler": true
++      "reactCompiler": true,
++      "baseUrl": "/demos/clarity"
+     }
+   }
+-}
++}
+\ No newline at end of file
+diff --git a/frontend/app/index.tsx b/frontend/app/index.tsx
+index bfcd09f..a0ba31c 100644
+--- a/frontend/app/index.tsx
++++ b/frontend/app/index.tsx
+@@ -24,13 +24,19 @@ import axios from 'axios';
+ import AddTaskModal from './components/AddTaskModal';
+ import EditTaskModal from './components/EditTaskModal';
+ import { API_BASE_URL } from './config';
++import { mockAdapter, seedDemoSession } from '../demo/mockApi';
+ 
+ // ============================================================================
+ // CONFIGURATION
+ // ============================================================================
+ 
+ // Configure axios
++// Portfolio build: answer every request in the browser instead of calling the Django API.
++const DEMO_MODE = process.env.EXPO_PUBLIC_DEMO === '1';
++if (DEMO_MODE) seedDemoSession(API_BASE_URL);
++
+ const api = axios.create({
++  ...(DEMO_MODE ? { adapter: mockAdapter as any } : {}),
+   baseURL: API_BASE_URL,
+   timeout: 30000, // Increased to 30 seconds for slower connections
+   headers: {
+@@ -941,6 +947,13 @@ const CalendarScreen: React.FC<{ navigation?: any }> = ({ navigation }) => {
+   const [refreshing, setRefreshing] = useState(false);
+   const [addTaskModalVisible, setAddTaskModalVisible] = useState(false);
+   const [calendarView, setCalendarView] = useState<'daily' | '3day' | 'weekly' | 'monthly'>('weekly');
++  const timelineRef = React.useRef<ScrollView>(null);
++  // Portfolio demo: open the timeline at 7am so the first view isn't an empty midnight-to-dawn grid.
++  React.useEffect(() => {
++    if (!DEMO_MODE) return;
++    const t = setTimeout(() => timelineRef.current?.scrollTo({ y: 7 * 60, animated: false }), 400);
++    return () => clearTimeout(t);
++  }, [calendarView, loading]);
+   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
+     const now = new Date();
+     const day = now.getDay();
+@@ -1292,6 +1305,7 @@ const CalendarScreen: React.FC<{ navigation?: any }> = ({ navigation }) => {
+       ) : (
+         // Day/3-Day/Week Timeline View (Google Calendar Style)
+         <ScrollView 
++          ref={timelineRef}
+           style={{ flex: 1, backgroundColor: '#fff' }}
+           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchEvents(); }} />}
+         >
+@@ -1629,19 +1643,19 @@ const TasksScreen: React.FC<{ navigation?: any; route?: any }> = ({ navigation,
+   };
+ 
+   // Filter tasks based on selected date and active/completed status
+-  const getFilteredTasks = (): Task[] => {
++  const getFilteredTasks = (tab: 'active' | 'completed' = activeTab): Task[] => {
+     const selectedDateStr = formatDate(selectedDate);
+-    console.log('🔍 Filtering tasks for date:', selectedDateStr, 'Tab:', activeTab);
++    console.log('🔍 Filtering tasks for date:', selectedDateStr, 'Tab:', tab);
+     
+     return tasks.filter(task => {
+       // Always show unscheduled tasks
+       if (!task.scheduled_date) {
+-        return activeTab === 'active' ? task.status !== 'done' : task.status === 'done';
++        return tab === 'active' ? task.status !== 'done' : task.status === 'done';
+       }
+       
+       // Show tasks scheduled for selected date
+       if (task.scheduled_date === selectedDateStr) {
+-        const matches = activeTab === 'active' ? task.status !== 'done' : task.status === 'done';
++        const matches = tab === 'active' ? task.status !== 'done' : task.status === 'done';
+         if (matches) {
+           console.log('✅ Task matches filter:', task.title, 'scheduled_date:', task.scheduled_date, 'status:', task.status);
+         }
+@@ -2286,7 +2300,7 @@ const TasksScreen: React.FC<{ navigation?: any; route?: any }> = ({ navigation,
+           style={[styles.taskTab, activeTab === 'active' && styles.taskTabActive]}
+         >
+           <Text style={[styles.taskTabText, activeTab === 'active' && styles.taskTabTextActive]}>
+-            Active ({getFilteredTasks().filter(t => t.status !== 'done').length})
++            Active ({getFilteredTasks('active').length})
+           </Text>
+         </TouchableOpacity>
+         <TouchableOpacity
+@@ -2294,7 +2308,7 @@ const TasksScreen: React.FC<{ navigation?: any; route?: any }> = ({ navigation,
+           style={[styles.taskTab, activeTab === 'completed' && styles.taskTabActive]}
+         >
+           <Text style={[styles.taskTabText, activeTab === 'completed' && styles.taskTabTextActive]}>
+-            Completed ({getFilteredTasks().filter(t => t.status === 'done').length})
++            Completed ({getFilteredTasks('completed').length})
+           </Text>
+         </TouchableOpacity>
+       </View>

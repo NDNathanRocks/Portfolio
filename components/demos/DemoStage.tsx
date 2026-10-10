@@ -50,7 +50,17 @@ function PlaceholderStage({ project }: { project: Project }) {
   const Demo = demoRegistry[project.id];
   const note = project.demo.kind === "confidential" ? "" : project.demo.note;
 
-  if (launched && Demo) return <Demo />;
+  if (launched && Demo)
+    return (
+      <div>
+        <Demo />
+        <div className="mt-4 text-right">
+          <button type="button" onClick={() => setLaunched(false)} className={`-my-2 inline-flex min-h-11 items-center px-2 text-paper/60 underline-offset-4 hover:text-paper hover:underline ${mono}`}>
+            Close demo
+          </button>
+        </div>
+      </div>
+    );
 
   return (
     <div className="relative flex min-h-[420px] flex-col items-center justify-center gap-6 overflow-hidden rounded-sm border border-paper/15 bg-[#0d0d0d] p-8 text-center md:min-h-[520px]">

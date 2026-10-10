@@ -175,3 +175,82 @@ Stays CSS 3D (WebGL not needed). `OrbitObject` gains:
 ## Phase 3 review checklist (additions)
 
 Contact route abuse cases (empty/oversized/malformed payloads, honeypot, rate limit), no secrets in the client bundle, Lenis vs. anchor links and focus, reduced-motion across every new animation, mobile drag-vs-scroll conflict on the cube, font payload from the Noto families, iframe sandbox settings.
+
+---
+
+# Iteration 3: Live project demos (Phase 1 plan, awaiting approval)
+
+Goal: the "Launch demo" stage on each `/projects/<slug>` page runs a real, usable demo built from the code in the public GitHub repos. RFP Utility stays confidential and is untouched.
+
+## 1. What the repos contain (read from the public GitHub API)
+
+| Project | Repo contents | Why it can't just be embedded |
+|---|---|---|
+| AISmileDetector | `AISmileDetector.py` (OpenCV Haar cascades: face `detectMultiScale(gray, 6, 7)`, smile `detectMultiScale(face, 1.7, 20)`), `haarcascade_frontalface_default.xml`, `haarcascade_smile.xml` | Python + desktop window. |
+| PanoramicStitching | `PanoramicStitching.m` (MATLAB, ORB), `images/` with 3 scenes: backyard, guitar, forestwalk (inputs, fastMatch and panorama outputs) | MATLAB can't run in a browser. |
+| BinIt | Flask `app.py` (torchvision ResNet152, ImageNet labels filtered to 9 classes mapped to green/blue/black/yellow bins), React frontend, `binit-gif-demo.gif` | Needs a Python/PyTorch server; ResNet152 weights are ~230 MB. |
+| Clarity | Expo (React Native) `frontend/` + Django `backend/` + Claude API | Needs a Django server and a secret API key. |
+
+## 2. Proposed demo per project (all client-side, nothing uploaded)
+
+- **AISmileDetector, faithful port.** OpenCV.js loads the *same two cascade XML files* with the *same parameters*. Webcam via `getUserMedia` (already allowed by `Permissions-Policy: camera=(self)`), boxes drawn on a canvas, "Smiling" label, and a "snapshot" button mirroring the script's capture. Fallback: upload a photo. Video never leaves the device.
+- **Panoramic Image Stitching, live.** OpenCV.js ORB detect, match, RANSAC homography, warp and blend on the repo's sample image pairs (pick a scene), showing keypoints, matches and the final panorama with measured ORB timing. Optional: stitch two of your own photos. Shares the OpenCV.js bundle with the smile demo, so it is downloaded once.
+- **BinIt!, in-browser classifier.** ONNX Runtime Web runs an ImageNet ResNet-family model; the output is filtered through the repo's exact 9-item `listoftrash` -> `bin_sort` mapping. Drag-and-drop an image, get the bin colour and label. Sample images included.
+- **Clarity, mocked-backend web build.** Export the Expo app for web (static), host it under `/demos/clarity` in a sandboxed same-origin iframe, with the API layer swapped for a local mock (seeded tasks, scripted "AI insights"). No Django, no API key, no cost. Phone-frame presentation.
+- **RFP Utility.** No change.
+
+## 3. Architecture
+
+1. `components/demos/registry.ts` maps slug -> `next/dynamic(() => import(...), { ssr: false })`. Heavy code loads only after the visitor clicks Launch (existing gate in `DemoStage`).
+2. New files: `components/demos/{SmileDemo,StitchDemo,BinItDemo,ClarityDemo}.tsx`, `lib/opencv.ts` (single lazy loader), `lib/onnx.ts`.
+3. Static assets in `public/demos/`: `opencv.js` (self-hosted, ~8-10 MB, no CDN), cascades, sample images, `models/*.onnx`, `clarity/` web export. Long-lived `Cache-Control` headers added in `next.config.ts`.
+4. Security: stays within the current CSP posture (self-hosted only, `frame-src 'self'`, iframe `sandbox="allow-scripts allow-same-origin"` for Clarity, `X-Frame-Options` relaxed to SAMEORIGIN only for `/demos/clarity/*`). Camera only on user click; clear "stays on your device" notice; stop tracks on unmount.
+5. UX: progress bar for model download, error and unsupported-browser states, reduced-motion respected, keyboard-operable controls, mobile layout checked.
+6. Content: each page's `note` text updated to describe what the demo really does; GitHub button stays.
+
+## 4. Steps
+
+1. Pull assets from the repos (cascades, sample images, Expo frontend) with attribution/license check.
+2. OpenCV.js loader + SmileDemo; test with a fake webcam stream in Chrome.
+3. StitchDemo on the three sample pairs; verify output against the repo's `*-panorama.png`.
+4. Convert/pick the BinIt ONNX model; BinItDemo; test on sample images.
+5. Clarity: Expo web export + mock API; iframe stage.
+6. Registry wiring, headers, page copy; tsc, eslint, `next build`, Puppeteer interaction and screenshot tests, bundle-size check (demo code must not touch the home page's JS).
+7. Phase 3 critic pass, then commit.
+
+## 5. Decisions needed
+
+1. **BinIt model size.** Repo uses ResNet152 (~230 MB), too large to ship to a visitor. Recommend a lite model (MobileNetV2 or int8 ResNet50, ~14-25 MB) with the same label mapping, disclosed on the page as "lightweight port". Alternative: host the original Flask/ResNet152 backend elsewhere (Render/HF Spaces), which means cold starts, uploads leave the device and ongoing hosting.
+2. **Clarity.** Recommend mocked-backend static web build (free, always works, can't leak a key). Alternative: live Django + Claude API (costs money, needs abuse protection). I need to confirm the Expo app builds for web (react-native-web) before committing to this.
+3. **AISmileDetector wording.** The code is Haar cascades, but the resume stack says "Neural Networks". The demo will be honest about what runs. Want the page copy left as is, or changed to "Haar cascade classifiers"?
+4. **Panorama claim.** OpenCV.js has no SURF, so the "14x vs SURF" figure can't be reproduced live. The demo will show ORB timing only and keep the 14x as a MATLAB benchmark claim. OK?
+5. **Binary weight.** Total new assets ~25-60 MB. Commit them to git (simple, but a larger repo and slower clones) or host on Vercel Blob? Recommend committing if under ~50 MB.
+
+## Iteration 3: implementation notes (Phase 2 complete)
+
+Built as planned. Decisions from approval: lighter BinIt model with an on-page disclosure, Clarity as an Expo web build with an in-browser mock backend, "Haar cascade classifiers" copy for AISmileDetector, the 14x SURF figure kept as a historical MATLAB benchmark with only live ORB time shown, assets committed to git (41 MB total, under the 50 MB threshold).
+
+- **Shared:** `lib/opencv.ts` (self-hosted OpenCV.js 4.10 loader), `components/demos/ui.tsx` (frame, progress, stats), `registry.ts` (lazy `next/dynamic`, one chunk per demo).
+- **AISmileDetector:** `SmileDemo.tsx`. Same two cascades and parameters as the script. Face range toggle: original `scaleFactor 6` or a wider `1.2` (default). Auto-captures up to 10 smiles like the script.
+- **Panoramic Stitching:** `StitchDemo.tsx`. 300px grayscale, ORB (1.01 scale, 3 levels), RANSAC similarity transform (OpenCV.js has no `estimateAffinePartial2D`, so the similarity fit is written in TypeScript), binary-mask composite. Three sample scenes plus the visitor's own photos. Shows the original MATLAB outputs for comparison.
+- **BinIt!:** `BinItDemo.tsx`. ONNX Runtime Web (wasm, single thread, self-hosted) running MobileNetV2-12 (14 MB). Same 9-item list, bin mapping and "first match in the top 10" rule as `obj_detect.py`. Four CC0 sample photos.
+- **Clarity:** `ClarityDemo.tsx` frames `/demos/clarity`, the real Expo app exported for the web. Source of the demo layer is in `scripts/clarity-demo/`. Rewrites and `X-Frame-Options: SAMEORIGIN` for that path only; every other route stays `DENY`.
+- **Copy:** AISmileDetector subtitle and stack now say Haar cascade classifiers; demo notes updated on all four projects.
+- **Tooling:** eslint and tsc ignore vendored assets and the Clarity build sources.
+
+Verification (production build): tsc, eslint, `next build` clean; project pages 183 kB first-load JS (demos are lazy); no heavy request before "Launch demo"; camera tracks stop on close; BinIt 4/4 samples correct (~21 ms); smile found and captured in a fake-webcam run; all three stitch scenes align; Clarity add/breakdown/create/schedule/chat flows work; no horizontal overflow at 390px; no console errors.
+
+## Iteration 3: Phase 3 (Critic) review
+
+**Bugs found and fixed**
+- Smile demo: reopening the demo (Close, then Launch again) silently broke the camera, because `FS_createDataFile` threw on the already-mounted cascade files. `mountFile` is now idempotent.
+- Smile demo: if the camera permission prompt was answered after the demo was closed, the stream was never stopped (camera light stayed on). Now the late stream is stopped immediately; a `pagehide` listener also releases tracks.
+- Smile and Stitch: OpenCV `Mat`/vector objects were freed only on the success path. All native objects are now freed in `finally` (Stitch tracks them in an `owned` list). Object URLs from uploads are revoked on every path.
+- Clarity (real app bug): the Active/Completed tab badges both called `getFilteredTasks()`, which already filters by the active tab, so the unselected badge was always 0. `getFilteredTasks(tab)` now takes the tab explicitly.
+- Clarity chat: "schedule X tomorrow at 3pm" now parses day and time (or picks the first free slot), creates and schedules the task, and the calendar shows it on next focus.
+- Clarity header claimed "Nothing is sent anywhere"; corrected now that breakdowns can call an AI proxy.
+- Touch targets under 40px (Close demo, All work, BinIt sample chips) raised to 44px; file-input labels now show a focus ring (`focus-within`).
+
+**New: `/api/clarity/decompose`**: Gemini Flash, then Groq (Llama 3.1 8B Instant), then `{fallback:true}` (the page uses its rule engine). Origin must match host, 1 KB body cap, title 2-120 chars, 20 requests/IP/hour and 1500/day (in-memory, per instance), `max_tokens` 300, JSON schema in the prompt, output validated with zod and sanitised (control characters stripped, 3-6 subtasks, minutes rounded to 5). Keys: `GEMINI_API_KEY`, `GROQ_API_KEY` (see `.env.example`); without them the route returns fallback and nothing breaks.
+
+**Verified** (Chrome, production build): failover paths (429, garbage JSON, all fail), 403 on bad/missing origin, 400, 413, rate limit trips at request 21; camera tracks `ended` after Close, after reopen x3, and when the prompt is answered late; denied-permission and undecodable-image messages in all three upload demos; WASM memory flat at 128 MB over 30 stitches and 25 photo analyses; no horizontal overflow at 390 and 320 px; tsc, eslint and `next build` clean.

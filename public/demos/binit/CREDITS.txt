@@ -1,0 +1,6 @@
+Sample photos for the BinIt demo, all CC0 / public domain, via Wikimedia Commons:
+- broccoli.jpg  "Broccoli Flower.jpg" (CC0)
+- bottle.jpg    "Angkor beer bottle.jpg" (CC0)
+- tissue.jpg    "Roll of toilet paper with one sheet folded down in front.jpg" (CC0)
+- bag.jpg       "Black plastic bag on white counter.jpg" (CC0)
+Model: MobileNetV2-12 from the ONNX Model Zoo (Apache-2.0). Labels: ImageNet-1k class names.

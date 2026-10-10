@@ -33,7 +33,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   return (
     <article className="px-6 pb-24 pt-12 md:px-14 md:pt-14">
-      <Link href="/#work" className={`inline-block text-paper/60 transition-colors hover:text-accent ${mono}`}>
+      <Link href="/#work" className={`-my-3 inline-flex min-h-11 items-center text-paper/60 transition-colors hover:text-accent ${mono}`}>
         &larr; All work
       </Link>
 
