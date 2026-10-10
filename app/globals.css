@@ -35,6 +35,14 @@ body {
   outline-offset: 4px;
 }
 
+#contact :focus-visible {
+  outline-color: #0a0a0a;
+}
+
+#contact form :focus-visible {
+  outline-color: #d6ff3f;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

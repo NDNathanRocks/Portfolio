@@ -1,7 +1,7 @@
 export const profile = {
   fullName: "Nathan Nicholas D'Souza",
   nameLines: ["Nathan", "Nicholas", "D'Souza"],
-  subtitle: "AI & Full-Stack Engineer | Vancouver, BC",
+  subtitle: "AI/ML & Full-Stack Engineer | Vancouver, BC",
   education: "BSc Computing Science (AI), Simon Fraser University",
   location: "Vancouver, BC",
   email: "naythandsouza@gmail.com",
@@ -65,7 +65,7 @@ export const projects: Project[] = [
     id: "smile",
     title: "AISmileDetector",
     subtitle: "Real-time facial expression analysis model",
-    meta: "Personal project",
+    meta: "Computer vision",
     stack: ["Python", "OpenCV", "Neural Networks"],
     repo: "https://github.com/NDNathanRocks/AISmileDetector",
     from: "#fbbf24",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
 import type { Project } from "@/lib/content";
@@ -12,8 +12,10 @@ export default function ProjectTile({ project, index }: { project: Project; inde
   const { id, title, subtitle, meta, stack, from, to, origin, layout, titleClass } = project;
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const [calm, setCalm] = useState(false);
+  useEffect(() => setCalm(!!reduced), [reduced]);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const artY = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [-36, 36]);
+  const artY = useTransform(scrollYProgress, [0, 1], calm ? [0, 0] : [-36, 36]);
 
   const wash: Variants = {
     rest: { clipPath: `circle(0% at ${origin})` },
@@ -63,7 +65,7 @@ export default function ProjectTile({ project, index }: { project: Project; inde
           <div className="flex items-start justify-between gap-4 font-mono text-xs uppercase tracking-[0.14em]">
             <span>{meta}</span>
             <motion.span aria-hidden variants={arrow} transition={{ duration: 0.5, ease }} className="text-lg leading-none">
-              &nearr;
+              ↗
             </motion.span>
           </div>
           <div>

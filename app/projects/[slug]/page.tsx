@@ -55,14 +55,14 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             rel="noopener noreferrer"
             className={`mt-8 inline-block rounded-full border border-paper/30 px-7 py-3 transition-colors hover:border-accent hover:bg-accent hover:text-ink ${mono}`}
           >
-            View on GitHub &nearr;
+            View on GitHub ↗
           </a>
         )}
       </header>
 
       {project.impact && (
         <div className="mb-20">
-          <ImpactPanel impact={project.impact} stack={project.stack} />
+          <ImpactPanel impact={project.impact} />
         </div>
       )}
 
@@ -72,13 +72,13 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
       <nav aria-label="More projects" className="mt-20 grid grid-cols-2 gap-6 border-t border-paper/15 pt-8">
         <Link href={`/projects/${prev.id}`} className="group">
-          <span className={`block text-paper/50 ${mono}`}>&larr; Previous</span>
+          <span className={`block text-paper/60 ${mono}`}>&larr; Previous</span>
           <span className="mt-2 block font-display text-2xl font-light transition-colors group-hover:text-accent md:text-4xl">
             {prev.title}
           </span>
         </Link>
         <Link href={`/projects/${next.id}`} className="group text-right">
-          <span className={`block text-paper/50 ${mono}`}>Next &rarr;</span>
+          <span className={`block text-paper/60 ${mono}`}>Next &rarr;</span>
           <span className="mt-2 block font-display text-2xl font-light transition-colors group-hover:text-accent md:text-4xl">
             {next.title}
           </span>

@@ -50,7 +50,7 @@ lib/
 
 **SideRail**: `position: fixed`, left, 76px wide, full height, right hairline. Top: "ND, Portfolio 26" rotated vertical mono text. Middle: Work / Experience / Contact anchor links, vertical, hover to accent. Bottom: accent dot. Below `md`, collapses to a top bar (no vertical rail on phones).
 
-**Hero**: 12-col grid. Left 7 cols: name "Nathan D'Souza" in two lines at large size (Archivo); subtitle "AI & Full-Stack Engineer | Vancouver, BC" below. Right 5 cols: OrbitObject. Staggered rise-in on load.
+**Hero**: 12-col grid. Left 7 cols: name "Nathan D'Souza" in two lines at large size (Archivo); subtitle "AI/ML & Full-Stack Engineer | Vancouver, BC" below. Right 5 cols: OrbitObject. Staggered rise-in on load.
 
 **VariableText** (the typography play, hero only): splits a string into per-letter `motion.span`s. Each letter has a spring-driven `wght` and `wdth`. Hovering a letter animates it toward max (wght 900, wdth 125) and its neighbours by distance falloff (ripple, ±2 letters), then springs back on leave. Implemented with `useMotionValue` / `useSpring` and `useTransform` into `fontVariationSettings`, so no React re-renders on hover. A layout-stable width: reserve each letter's max width via an invisible sizer, or let the line wrap-safe with `inline-block` and accept slight reflow; I'll pick the sizer approach if reflow looks bad in testing. Respects `prefers-reduced-motion` (static weight) and applies `aria-label` on the wrapper with letters `aria-hidden`. Subtitle uses the same component at a smaller scale and lower max values.
 

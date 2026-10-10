@@ -5,6 +5,7 @@ import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } f
 import VariableText from "./VariableText";
 import OrbitObject from "./OrbitObject";
 import { profile } from "@/lib/content";
+import { resumePath } from "@/lib/site";
 
 const label = "font-mono text-xs uppercase tracking-[0.14em] text-paper/60";
 
@@ -87,6 +88,19 @@ export default function Hero() {
                 falloff={[1, 0.6, 0.3, 0.1]}
               />
             </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.45, ease: [0.2, 0.7, 0.2, 1] }}
+            >
+              <a
+                href={resumePath}
+                download="Nathan_DSouza_Resume.pdf"
+                className={`mt-8 inline-flex items-center gap-3 rounded-full border border-paper/30 px-6 py-3.5 text-paper transition-colors hover:border-accent hover:bg-accent hover:text-ink focus-visible:border-accent focus-visible:bg-accent focus-visible:text-ink font-mono text-xs uppercase tracking-[0.14em]`}
+              >
+                Download Resume <span aria-hidden>↓</span>
+              </a>
+            </motion.div>
           </Drift>
         </motion.div>
       </div>

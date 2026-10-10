@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
+import { renderContactEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -9,7 +10,7 @@ const schema = z.object({
   email: z.email().max(200),
   other: z.string().trim().max(200).optional().default(""),
   message: z.string().trim().min(10).max(4000),
-  website: z.string().max(200).optional().default(""),
+  hp: z.string().max(200).optional().default(""),
   elapsed: z.number().optional().default(0),
 });
 
@@ -58,9 +59,9 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "Please check your name, email and message (10+ characters)." }, { status: 400 });
   }
-  const { name, email, other, message, website, elapsed } = parsed.data;
+  const { name, email, other, message, hp, elapsed } = parsed.data;
 
-  if (website || elapsed < MIN_FILL_MS) return NextResponse.json({ ok: true });
+  if (hp || elapsed < MIN_FILL_MS) return NextResponse.json({ ok: true });
 
   const ip = (req.headers.get("x-forwarded-for") ?? "unknown").split(",")[0].trim();
   if (limited(ip)) {
@@ -85,6 +86,7 @@ export async function POST(req: Request) {
       replyTo: email,
       headers: { "X-Priority": "1", Importance: "high" },
       subject: `Portfolio message from ${oneLine(name).slice(0, 80)}`,
+      html: renderContactEmail({ name: oneLine(name), email, other: oneLine(other), message }),
       text: lines.join("\n"),
     });
     if (error) return NextResponse.json({ error: "Couldn't send your message. Please try again." }, { status: 502 });

@@ -147,14 +147,9 @@ export default function OrbitObject({ size = 340, scroll }: { size?: number; scr
     <div
       ref={ref}
       aria-hidden
-      className="relative select-none"
-      style={{
-        width: size,
-        height: size,
-        perspective: 1400,
-        touchAction: "pan-y",
-        cursor: reduced ? "default" : grabbing ? "grabbing" : "grab",
-      }}
+      data-grabbing={grabbing ? "true" : "false"}
+      className="relative cursor-grab select-none motion-reduce:cursor-default data-[grabbing=true]:cursor-grabbing"
+      style={{ width: size, height: size, perspective: 1400, touchAction: "pan-y" }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}

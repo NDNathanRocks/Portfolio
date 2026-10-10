@@ -44,7 +44,7 @@ export default function Experience() {
               <Reveal>Where I&rsquo;ve</Reveal>
               <Reveal delay={0.08}>been</Reveal>
             </h2>
-            <p className={`mt-6 text-paper/50 ${mono}`}>03 chapters</p>
+            <p className={`mt-6 text-paper/60 ${mono}`}>03 chapters</p>
           </div>
 
           <div className="lg:col-span-7 lg:col-start-6">
@@ -66,7 +66,7 @@ export default function Experience() {
                         aria-hidden
                         initial={{ backgroundColor: "#0a0a0a", scale: 1 }}
                         whileInView={{ backgroundColor: "#d6ff3f", scale: 1.5 }}
-                        viewport={{ margin: "-45% 0px -45% 0px" }}
+                        viewport={{ once: true, margin: "-45% 0px -45% 0px" }}
                         transition={{ duration: 0.4 }}
                         className="absolute left-[-36px] top-[38px] z-20 hidden h-[9px] w-[9px] rounded-full border border-accent md:block md:left-[-44px]"
                       />
@@ -117,7 +117,7 @@ export default function Experience() {
                     <li key={a.title}>
                       <p className="font-display text-xl">{a.title}</p>
                       <p className="text-paper/70">{a.detail}</p>
-                      <p className={`mt-1 text-paper/50 ${mono}`}>{a.date}</p>
+                      <p className={`mt-1 text-paper/60 ${mono}`}>{a.date}</p>
                     </li>
                   ))}
                 </ul>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { animate, useInView, useReducedMotion } from "framer-motion";
 
 export default function CountUp({
@@ -18,6 +18,10 @@ export default function CountUp({
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const reduced = useReducedMotion();
 
+  useLayoutEffect(() => {
+    if (ref.current) ref.current.textContent = `${prefix}${reduced ? value : 0}${suffix}`;
+  }, [reduced, value, prefix, suffix]);
+
   useEffect(() => {
     const node = ref.current;
     if (!node || !inView || reduced) return;
@@ -32,8 +36,8 @@ export default function CountUp({
   }, [inView, reduced, value, prefix, suffix]);
 
   return (
-    <span ref={ref} className={className} suppressHydrationWarning>
-      {`${prefix}${reduced ? value : 0}${suffix}`}
+    <span ref={ref} className={className}>
+      {`${prefix}${value}${suffix}`}
     </span>
   );
 }

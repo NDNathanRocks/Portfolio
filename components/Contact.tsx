@@ -1,6 +1,7 @@
 import ContactForm from "./ContactForm";
 import HelloRotator from "./HelloRotator";
 import { profile } from "@/lib/content";
+import { resumePath } from "@/lib/site";
 
 const mono = "font-mono text-xs uppercase tracking-[0.14em]";
 const link = "underline-offset-4 hover:underline focus-visible:underline";
@@ -27,6 +28,10 @@ export default function Contact() {
             <div>
               <dt className="mb-1 opacity-60">GitHub</dt>
               <dd><a href={profile.github} target="_blank" rel="noopener noreferrer" className={link}>/NDNathanRocks</a></dd>
+            </div>
+            <div>
+              <dt className="mb-1 opacity-60">Resume</dt>
+              <dd><a href={resumePath} download="Nathan_DSouza_Resume.pdf" className={link}>Download PDF ↓</a></dd>
             </div>
             <div>
               <dt className="mb-1 opacity-60">Based in</dt>

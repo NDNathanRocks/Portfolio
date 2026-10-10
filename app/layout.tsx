@@ -11,8 +11,10 @@ import {
   Noto_Sans_Tamil,
   Noto_Sans_Thai,
 } from "next/font/google";
+import Providers from "@/components/Providers";
 import SideRail from "@/components/SideRail";
 import SmoothScroll from "@/components/SmoothScroll";
+import { siteDescription, siteTitle, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
@@ -28,9 +30,27 @@ const tamil = Noto_Sans_Tamil({ subsets: ["tamil"], variable: "--font-tamil", di
 const thai = Noto_Sans_Thai({ subsets: ["thai"], variable: "--font-thai", display: "swap", preload: false });
 
 export const metadata: Metadata = {
-  title: "Nathan Nicholas D'Souza | AI & Full-Stack Engineer",
-  description:
-    "Portfolio of Nathan Nicholas D'Souza, an AI & Full-Stack Engineer based in Vancouver, BC.",
+  metadataBase: new URL(siteUrl),
+  title: siteTitle,
+  description: siteDescription,
+  applicationName: "Nathan Nicholas D'Souza",
+  authors: [{ name: "Nathan Nicholas D'Souza" }],
+  keywords: ["AI/ML engineer", "full-stack developer", "computer vision", "Vancouver", "portfolio"],
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Nathan Nicholas D'Souza",
+    title: siteTitle,
+    description: siteDescription,
+    locale: "en_CA",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+  },
 };
 
 const fontVars = [archivo, bricolage, dmMono, deva, arab, guru, guj, beng, tamil, thai]
@@ -43,9 +63,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={fontVars}>
       <body>
-        <SmoothScroll />
-        <SideRail />
-        <main className="md:pl-[76px]">{children}</main>
+        <Providers>
+          <SmoothScroll />
+          <SideRail />
+          <main className="md:pl-[76px]">{children}</main>
+        </Providers>
       </body>
     </html>
   );

@@ -27,7 +27,7 @@ const fields: Variants = {
 
 const label = "mb-2 block font-mono text-xs uppercase tracking-[0.14em] text-paper/60";
 const input =
-  "w-full border-0 border-b border-paper/30 bg-transparent py-3 text-lg text-paper outline-none transition-colors placeholder:text-paper/30 focus:border-accent";
+  "w-full border-0 border-b border-paper/30 bg-transparent py-3 text-lg text-paper outline-none transition-colors placeholder:text-paper/50 focus:border-accent";
 
 export default function ContactForm() {
   const reduced = useReducedMotion();
@@ -35,7 +35,7 @@ export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [landed, setLanded] = useState(false);
   const [error, setError] = useState("");
-  const [values, setValues] = useState({ name: "", email: "", other: "", message: "", website: "" });
+  const [values, setValues] = useState({ name: "", email: "", other: "", message: "", hp: "" });
 
   const set = (key: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setValues((v) => ({ ...v, [key]: e.target.value }));
@@ -62,7 +62,7 @@ export default function ContactForm() {
   };
 
   const reset = () => {
-    setValues({ name: "", email: "", other: "", message: "", website: "" });
+    setValues({ name: "", email: "", other: "", message: "", hp: "" });
     setStatus("idle");
     setLanded(false);
     startedAt.current = Date.now();
@@ -124,13 +124,13 @@ export default function ContactForm() {
               <div>
                 <label htmlFor="cf-message" className={label}>Message</label>
                 <textarea id="cf-message" required minLength={10} maxLength={4000} rows={5} value={values.message} onChange={set("message")} className={`${input} resize-none`} placeholder="What would you like to talk about?" />
-                <p className="mt-2 text-right font-mono text-xs text-paper/40">{values.message.length}/4000</p>
+                <p className="mt-2 text-right font-mono text-xs text-paper/60">{values.message.length}/4000</p>
               </div>
 
               <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
                 <label>
-                  Website
-                  <input tabIndex={-1} autoComplete="off" value={values.website} onChange={set("website")} name="website" />
+                  Leave this field empty
+                  <input tabIndex={-1} autoComplete="off" value={values.hp} onChange={set("hp")} name="hp" />
                 </label>
               </div>
 
