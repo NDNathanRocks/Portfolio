@@ -48,3 +48,47 @@ body {
     scroll-behavior: auto;
   }
 }
+
+/* Physical dark surface: hairline border + specular top edge. */
+.surface {
+  border: 1px solid rgb(255 255 255 / 0.08);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07);
+}
+
+/* Cursor-tracked spotlight. --mouse-x/--mouse-y are set from JS without re-rendering. */
+.spotlight {
+  position: relative;
+}
+.spotlight::before,
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.spotlight::before {
+  z-index: 1;
+  background: radial-gradient(320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgb(255 255 255 / 0.07), transparent 70%);
+}
+.spotlight::after {
+  z-index: 30;
+  padding: 1px;
+  background: radial-gradient(200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgb(255 255 255 / 0.5), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+@media (hover: hover) and (pointer: fine) {
+  .spotlight:hover::before,
+  .spotlight:hover::after {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight::before,
+  .spotlight::after {
+    display: none;
+  }
+}

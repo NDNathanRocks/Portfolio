@@ -1,3 +1,4 @@
+import BlurIn from "./BlurIn";
 import ProjectTile from "./ProjectTile";
 import Reveal from "./Reveal";
 import VelocityMarquee from "./VelocityMarquee";
@@ -28,7 +29,7 @@ export default function WorkGrid() {
             <Reveal>Work</Reveal>
           </h2>
           <span className="font-mono text-xs uppercase tracking-[0.14em] text-paper/60">
-            {String(projects.length).padStart(2, "0")} selected
+            <BlurIn text={`${String(projects.length).padStart(2, "0")} selected`} />
           </span>
         </div>
         <div className="grid grid-cols-1 gap-5 md:auto-rows-[130px] md:grid-cols-12">

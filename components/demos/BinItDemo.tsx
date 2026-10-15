@@ -242,7 +242,7 @@ export default function BinItDemo() {
               key={`${preview}-${result.ms}`}
               initial={reduced ? false : { opacity: 0, y: 16, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="rounded-sm p-6" style={bin ? { background: bin.color, color: bin.ink } : { background: "#1a1a1a", color: "#f4efe6" }}>
                 <p className={`${mono} opacity-70`}>{bin ? "Put it in the" : "Hmm"}</p>
@@ -254,7 +254,7 @@ export default function BinItDemo() {
                 </p>
               </div>
 
-              <p className={`mb-3 mt-6 text-paper/50 ${mono}`}>Model&rsquo;s top guesses · {result.ms.toFixed(0)} ms</p>
+              <p className={`mb-3 mt-6 text-paper/50 ${mono}`}>Model&rsquo;s top guesses · <span className="tabular-nums">{result.ms.toFixed(0)}</span> ms</p>
               <ul className="space-y-2">
                 {result.top.map((t) => (
                   <li key={t.name} className="grid grid-cols-[minmax(0,1fr)_3.5rem] items-center gap-3 text-sm">

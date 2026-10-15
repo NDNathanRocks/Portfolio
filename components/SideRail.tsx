@@ -1,5 +1,7 @@
 "use client";
 
+import { snap } from "@/lib/motion";
+import Magnetic from "./Magnetic";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,7 +21,7 @@ export default function SideRail() {
   const home = pathname === "/";
   const [active, setActive] = useState<string | null>(null);
   const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
+  const progress = useSpring(scrollYProgress, snap);
   const dotY = useTransform(progress, [0, 1], [0, 87]);
 
   useEffect(() => {
@@ -42,26 +44,37 @@ export default function SideRail() {
 
   const href = (id: string) => (home ? `#${id}` : `/#${id}`);
   const linkClass = (id?: string) =>
-    `${labelClass} transition-colors hover:text-accent ${id && active === id ? "text-accent" : "text-paper"}`;
+    `${labelClass} relative transition-colors duration-200 hover:text-accent ${id && active === id ? "text-accent" : "text-paper"}`;
 
   const Anchor = home ? "a" : Link;
 
   return (
     <>
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[76px] flex-col items-center justify-between border-r border-paper/15 bg-ink py-8 md:flex">
-        <Anchor href={home ? "#top" : "/"} className={`${linkClass("top")} ${vertical}`}>
-          ND &mdash; Portfolio 26
-        </Anchor>
+        <Magnetic max={4}>
+          <Anchor href={home ? "#top" : "/"} className={`${linkClass("top")} ${vertical}`}>
+            ND &mdash; Portfolio 26
+          </Anchor>
+        </Magnetic>
         <nav aria-label="Primary" className="flex flex-col items-center gap-9">
           {sections.map((s) => (
-            <Anchor
-              key={s.id}
-              href={href(s.id)}
-              aria-current={active === s.id ? "location" : undefined}
-              className={`${linkClass(s.id)} ${vertical}`}
-            >
-              {s.label}
-            </Anchor>
+            <Magnetic key={s.id} max={4}>
+              <Anchor
+                href={href(s.id)}
+                aria-current={active === s.id ? "location" : undefined}
+                className={`${linkClass(s.id)} ${vertical}`}
+              >
+                {s.label}
+                {active === s.id && (
+                  <motion.span
+                    aria-hidden
+                    layoutId="rail-active"
+                    transition={snap}
+                    className="absolute inset-y-0 -left-3 w-[2px] bg-accent"
+                  />
+                )}
+              </Anchor>
+            </Magnetic>
           ))}
         </nav>
         <div aria-hidden className="relative flex h-24 w-px justify-center bg-paper/20">

@@ -1,3 +1,5 @@
+import Enter from "@/components/Enter";
+import Magnetic from "@/components/Magnetic";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -38,25 +40,40 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       </Link>
 
       <header className="mb-16 mt-12 md:mb-20">
-        <p className={`text-paper/60 ${mono}`}>{project.meta}</p>
-        <h1 className="mt-5 font-display text-[clamp(3rem,10vw,9rem)] font-light leading-[0.9] tracking-[-0.04em]">
-          {project.title}
-        </h1>
-        <p className="mt-6 max-w-[36ch] text-xl text-paper/80 md:text-2xl">{project.subtitle}</p>
-        <ul className={`mt-6 flex flex-wrap gap-x-5 gap-y-2 text-paper/60 ${mono}`}>
-          {project.stack.map((s) => (
-            <li key={s}>{s}</li>
-          ))}
-        </ul>
+        <div
+          aria-hidden
+          className="mb-8 h-[3px] w-24 rounded-full"
+          style={{ background: `linear-gradient(90deg, ${project.from}, ${project.to})` }}
+        />
+        <Enter>
+          <p className={`text-paper/60 ${mono}`}>{project.meta}</p>
+        </Enter>
+        <Enter step={1}>
+          <h1 className="mt-5 font-display text-[clamp(3rem,10vw,9rem)] font-light leading-[0.9] tracking-[-0.04em]">
+            {project.title}
+          </h1>
+        </Enter>
+        <Enter step={2}>
+          <p className="mt-6 max-w-[36ch] text-xl text-paper/80 md:text-2xl">{project.subtitle}</p>
+          <ul className={`mt-6 flex flex-wrap gap-x-5 gap-y-2 text-paper/60 ${mono}`}>
+            {project.stack.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
+          </ul>
+        </Enter>
         {project.repo && (
-          <a
-            href={project.repo}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`mt-8 inline-block rounded-full border border-paper/30 px-7 py-3 transition-colors hover:border-accent hover:bg-accent hover:text-ink ${mono}`}
-          >
-            View on GitHub ↗
-          </a>
+          <Enter step={3}>
+            <Magnetic className="mt-8">
+              <a
+                href={project.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-block rounded-full border border-paper/30 px-7 py-3 transition-colors duration-200 hover:border-accent hover:bg-accent hover:text-ink ${mono}`}
+              >
+                View on GitHub ↗
+              </a>
+            </Magnetic>
+          </Enter>
         )}
       </header>
 

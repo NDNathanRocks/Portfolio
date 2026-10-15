@@ -1,10 +1,11 @@
 "use client";
 
+import { easeOut } from "@/lib/motion";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { greetings } from "@/lib/greetings";
 
-const ease = [0.2, 0.7, 0.2, 1] as const;
+const ease = easeOut;
 
 export default function HelloRotator() {
   const ref = useRef<HTMLDivElement>(null);

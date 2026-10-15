@@ -15,7 +15,7 @@ export const btnPrimary =
 // Frame shared by every demo: label row, privacy line, body.
 export function DemoFrame({ label, privacy, children }: { label: string; privacy: string; children: ReactNode }) {
   return (
-    <div className="rounded-sm border border-paper/15 bg-[#0d0d0d]">
+    <div className="surface rounded-sm bg-[#0d0d0d]">
       <div className={`flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-b border-paper/10 px-5 py-3 ${mono}`}>
         <span className="text-accent">{label}</span>
         <span className="text-paper/50">{privacy}</span>

@@ -1,5 +1,6 @@
 "use client";
 
+import { easeOut } from "@/lib/motion";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { animate, useInView, useReducedMotion } from "framer-motion";
 
@@ -7,7 +8,7 @@ export default function CountUp({
   value,
   prefix = "",
   suffix = "",
-  className = "",
+  className = "tabular-nums",
 }: {
   value: number;
   prefix?: string;
@@ -26,8 +27,8 @@ export default function CountUp({
     const node = ref.current;
     if (!node || !inView || reduced) return;
     const controls = animate(0, value, {
-      duration: 1.6,
-      ease: [0.2, 0.7, 0.2, 1],
+      duration: 1.1,
+      ease: easeOut,
       onUpdate: (v) => {
         node.textContent = `${prefix}${Math.round(v)}${suffix}`;
       },

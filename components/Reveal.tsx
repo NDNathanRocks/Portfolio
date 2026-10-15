@@ -1,5 +1,6 @@
 "use client";
 
+import { easeOut } from "@/lib/motion";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
@@ -21,7 +22,7 @@ export default function Reveal({
         className="block"
         initial={{ y: "110%" }}
         animate={{ y: inView ? 0 : "110%" }}
-        transition={{ duration: 1, delay, ease: [0.2, 0.7, 0.2, 1] }}
+        transition={{ duration: 0.7, delay, ease: easeOut }}
       >
         {children}
       </motion.span>

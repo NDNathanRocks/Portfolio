@@ -1,5 +1,6 @@
 "use client";
 
+import { easeOut } from "@/lib/motion";
 import { motion } from "framer-motion";
 import CountUp from "../CountUp";
 import type { Metric } from "@/lib/content";
@@ -43,11 +44,11 @@ export default function ImpactPanel({ impact }: { impact: Metric[] }) {
           {steps.map((s, i) => (
             <motion.li
               key={s.label}
-              initial={{ opacity: 0, x: -24 }}
+              initial={{ opacity: 0, x: -16 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.7, delay: i * 0.15, ease: [0.2, 0.7, 0.2, 1] }}
-              className="relative flex items-center justify-between rounded-sm border border-paper/15 px-6 py-5"
+              transition={{ duration: 0.5, delay: i * 0.08, ease: easeOut }}
+              className="relative flex items-center justify-between surface rounded-sm px-6 py-5"
             >
               <span className="font-display text-2xl font-light">{s.label}</span>
               <span className={`text-paper/60 ${mono}`}>{s.detail}</span>

@@ -1,5 +1,8 @@
 "use client";
 
+import { easeDrawer } from "@/lib/motion";
+import { spotlightMove } from "@/lib/spotlight";
+import BlurIn from "./BlurIn";
 import { useRef } from "react";
 import { motion, useScroll, useSpring, type Variants } from "framer-motion";
 import CountUp from "./CountUp";
@@ -8,7 +11,7 @@ import VelocityMarquee from "./VelocityMarquee";
 import { awards, experience, skills } from "@/lib/content";
 
 const mono = "font-mono text-xs uppercase tracking-[0.14em]";
-const ease = [0.2, 0.7, 0.2, 1] as const;
+const ease = easeDrawer;
 
 const chips = skills.flatMap((s) => s.items.split(", "));
 const rowA = chips.filter((_, i) => i % 2 === 0);
@@ -44,7 +47,7 @@ export default function Experience() {
               <Reveal>Where I&rsquo;ve</Reveal>
               <Reveal delay={0.08}>been</Reveal>
             </h2>
-            <p className={`mt-6 text-paper/60 ${mono}`}>03 chapters</p>
+            <p className={`mt-6 text-paper/60 ${mono}`}><BlurIn text="03 chapters" /></p>
           </div>
 
           <div className="lg:col-span-7 lg:col-start-6">
@@ -67,18 +70,18 @@ export default function Experience() {
                         initial={{ backgroundColor: "#0a0a0a", scale: 1 }}
                         whileInView={{ backgroundColor: "#d6ff3f", scale: 1.5 }}
                         viewport={{ once: true, margin: "-45% 0px -45% 0px" }}
-                        transition={{ duration: 0.4 }}
+                        transition={{ duration: 0.3, ease: easeDrawer }}
                         className="absolute left-[-36px] top-[38px] z-20 hidden h-[9px] w-[9px] rounded-full border border-accent md:block md:left-[-44px]"
                       />
-                      <div className="relative overflow-hidden">
+                      <div className="spotlight relative overflow-hidden" onPointerMove={spotlightMove}>
                       <motion.div
                         aria-hidden
                         variants={wash(origin)}
-                        transition={{ duration: 0.8, ease }}
+                        transition={{ duration: 0.5, ease }}
                         className="absolute inset-0"
                         style={{ background: `linear-gradient(135deg, ${row.from}, ${row.to})` }}
                       />
-                      <motion.div variants={ink} transition={{ duration: 0.4 }} className="relative z-10 px-5 py-7">
+                      <motion.div variants={ink} transition={{ duration: 0.3, ease }} className="relative z-10 px-5 py-7">
                         <div className="flex flex-col justify-between gap-2 sm:flex-row sm:gap-6">
                           <div>
                             <p className="font-display text-2xl font-light leading-tight md:text-3xl">{row.role}</p>
@@ -94,7 +97,7 @@ export default function Experience() {
                                 <dd className="font-display text-4xl font-medium leading-none tracking-[-0.03em] md:text-5xl">
                                   <CountUp value={m.value} prefix={m.prefix} suffix={m.suffix} />
                                   <span aria-hidden className={`mt-2 block font-mono text-xs font-normal uppercase tracking-[0.14em] opacity-60`}>
-                                    {m.label}
+                                    <BlurIn text={m.label} />
                                   </span>
                                 </dd>
                               </div>

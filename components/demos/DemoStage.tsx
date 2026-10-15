@@ -1,5 +1,6 @@
 "use client";
 
+import Magnetic from "@/components/Magnetic";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { Project } from "@/lib/content";
@@ -9,7 +10,7 @@ const mono = "font-mono text-xs uppercase tracking-[0.14em]";
 
 function ConfidentialStage() {
   return (
-    <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden rounded-sm border border-paper/15 bg-[#0d0d0d] p-8 md:min-h-[520px]">
+    <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden rounded-sm surface bg-[#0d0d0d] p-8 md:min-h-[520px]">
       <div aria-hidden className="absolute inset-0 grid grid-cols-6 gap-3 p-6 opacity-60 blur-[6px]">
         {Array.from({ length: 18 }).map((_, i) => (
           <div
@@ -78,14 +79,16 @@ function PlaceholderStage({ project }: { project: Project }) {
         {Demo ? "Ready when you are." : "Coming soon."}
       </p>
       <p className="relative max-w-[44ch] text-paper/60">{note}</p>
-      <button
-        type="button"
-        disabled={!Demo}
-        onClick={() => setLaunched(true)}
-        className={`relative rounded-full border border-paper/30 px-8 py-3.5 transition-colors enabled:hover:border-accent enabled:hover:bg-accent enabled:hover:text-ink disabled:cursor-not-allowed disabled:opacity-40 ${mono}`}
-      >
-        Launch demo
-      </button>
+      <Magnetic className="relative">
+        <button
+          type="button"
+          disabled={!Demo}
+          onClick={() => setLaunched(true)}
+          className={`rounded-full border border-paper/30 px-8 py-3.5 transition-colors duration-200 enabled:hover:border-accent enabled:hover:bg-accent enabled:hover:text-ink disabled:cursor-not-allowed disabled:opacity-40 ${mono}`}
+        >
+          Launch demo
+        </button>
+      </Magnetic>
     </div>
   );
 }

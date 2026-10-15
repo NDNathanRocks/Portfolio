@@ -1,5 +1,7 @@
 "use client";
 
+import Magnetic from "./Magnetic";
+import { easeOut } from "@/lib/motion";
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import VariableText from "./VariableText";
@@ -55,9 +57,9 @@ export default function Hero() {
 
       <div className="relative z-10 py-12">
         <motion.h1
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.2, 0.7, 0.2, 1] }}
+          transition={{ duration: 0.6, ease: easeOut }}
           className="font-hero uppercase leading-[0.86] tracking-[-0.04em] text-[clamp(3.75rem,11.5vw,10.75rem)]"
         >
           <span className="sr-only">{profile.fullName}</span>
@@ -78,7 +80,7 @@ export default function Hero() {
             <motion.p
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.25, ease: [0.2, 0.7, 0.2, 1] }}
+              transition={{ duration: 0.55, delay: 0.12, ease: easeOut }}
               className="mt-10 max-w-3xl font-hero text-xl text-paper/85 md:text-3xl"
             >
               <VariableText
@@ -91,15 +93,17 @@ export default function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.45, ease: [0.2, 0.7, 0.2, 1] }}
+              transition={{ duration: 0.55, delay: 0.22, ease: easeOut }}
             >
-              <a
-                href={resumePath}
-                download="Nathan_DSouza_Resume.pdf"
-                className={`mt-8 inline-flex items-center gap-3 rounded-full border border-paper/30 px-6 py-3.5 text-paper transition-colors hover:border-accent hover:bg-accent hover:text-ink focus-visible:border-accent focus-visible:bg-accent focus-visible:text-ink font-mono text-xs uppercase tracking-[0.14em]`}
-              >
-                Download Resume <span aria-hidden>↓</span>
-              </a>
+              <Magnetic className="mt-8">
+                <a
+                  href={resumePath}
+                  download="Nathan_DSouza_Resume.pdf"
+                  className={`inline-flex items-center gap-3 rounded-full border border-paper/30 px-6 py-3.5 text-paper transition-colors duration-200 hover:border-accent hover:bg-accent hover:text-ink focus-visible:border-accent focus-visible:bg-accent focus-visible:text-ink font-mono text-xs uppercase tracking-[0.14em]`}
+                >
+                  Download Resume <span aria-hidden>↓</span>
+                </a>
+              </Magnetic>
             </motion.div>
           </Drift>
         </motion.div>
