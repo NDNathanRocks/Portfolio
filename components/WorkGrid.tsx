@@ -1,3 +1,4 @@
+import ScrollSkew from "./ScrollSkew";
 import BlurIn from "./BlurIn";
 import ProjectTile from "./ProjectTile";
 import Reveal from "./Reveal";
@@ -14,7 +15,7 @@ export default function WorkGrid() {
           <span key={w} className="flex items-center">
             <span
               className="px-8 font-display text-[clamp(4rem,12vw,10rem)] font-light uppercase leading-none tracking-[-0.04em] text-transparent"
-              style={{ WebkitTextStroke: "1px rgba(244,239,230,0.45)" }}
+              style={{ WebkitTextStroke: "1px color-mix(in srgb, var(--paper) 45%, transparent)" }}
             >
               {w}
             </span>
@@ -32,11 +33,11 @@ export default function WorkGrid() {
             <BlurIn text={`${String(projects.length).padStart(2, "0")} selected`} />
           </span>
         </div>
-        <div className="grid grid-cols-1 gap-5 md:auto-rows-[130px] md:grid-cols-12">
+        <ScrollSkew className="grid grid-cols-1 gap-5 md:auto-rows-[130px] md:grid-cols-12">
           {projects.map((project, i) => (
             <ProjectTile key={project.id} project={project} index={i} />
           ))}
-        </div>
+        </ScrollSkew>
       </div>
     </section>
   );

@@ -10,7 +10,7 @@ const mono = "font-mono text-xs uppercase tracking-[0.14em]";
 
 function ConfidentialStage() {
   return (
-    <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden rounded-sm surface bg-[#0d0d0d] p-8 md:min-h-[520px]">
+    <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden rounded-sm surface bg-s2 p-8 md:min-h-[520px]">
       <div aria-hidden className="absolute inset-0 grid grid-cols-6 gap-3 p-6 opacity-60 blur-[6px]">
         {Array.from({ length: 18 }).map((_, i) => (
           <div
@@ -64,7 +64,7 @@ function PlaceholderStage({ project }: { project: Project }) {
     );
 
   return (
-    <div className="relative flex min-h-[420px] flex-col items-center justify-center gap-6 overflow-hidden rounded-sm border border-paper/15 bg-[#0d0d0d] p-8 text-center md:min-h-[520px]">
+    <div className="relative flex min-h-[420px] flex-col items-center justify-center gap-6 overflow-hidden rounded-sm surface bg-s2 p-8 text-center md:min-h-[520px]">
       <div
         aria-hidden
         className="absolute inset-0 opacity-40"

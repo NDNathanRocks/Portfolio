@@ -1,5 +1,6 @@
 "use client";
 
+import ScrollPlace from "./ScrollPlace";
 import { easeDrawer } from "@/lib/motion";
 import { spotlightMove } from "@/lib/spotlight";
 import BlurIn from "./BlurIn";
@@ -36,7 +37,6 @@ export default function Experience() {
     rest: { clipPath: `circle(0% at ${origin})` },
     hover: { clipPath: `circle(150% at ${origin})` },
   });
-  const ink: Variants = { rest: { color: "#f4efe6" }, hover: { color: "#0a0a0a" } };
 
   return (
     <section id="experience" className="scroll-mt-4 py-24 md:py-32">
@@ -63,16 +63,25 @@ export default function Experience() {
                       key={row.role}
                       initial="rest"
                       whileHover="hover"
-                      className="relative border-t border-paper/15 last:border-b"
+                      className="group relative border-t border-paper/15 last:border-b"
                     >
                       <motion.span
                         aria-hidden
-                        initial={{ backgroundColor: "#0a0a0a", scale: 1 }}
-                        whileInView={{ backgroundColor: "#d6ff3f", scale: 1.5 }}
+                        initial={{ scale: 1 }}
+                        whileInView={{ scale: 1.5 }}
                         viewport={{ once: true, margin: "-45% 0px -45% 0px" }}
                         transition={{ duration: 0.3, ease: easeDrawer }}
-                        className="absolute left-[-36px] top-[38px] z-20 hidden h-[9px] w-[9px] rounded-full border border-accent md:block md:left-[-44px]"
-                      />
+                        className="absolute left-[-36px] top-[38px] z-20 hidden h-[9px] w-[9px] overflow-hidden rounded-full border border-accent bg-ink md:block md:left-[-44px]"
+                      >
+                        <motion.span
+                          className="absolute inset-0 bg-accent"
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true, margin: "-45% 0px -45% 0px" }}
+                          transition={{ duration: 0.3, ease: easeDrawer }}
+                        />
+                      </motion.span>
+                      <ScrollPlace x={i % 2 === 0 ? 36 : -36} y={24}>
                       <div className="spotlight relative overflow-hidden" onPointerMove={spotlightMove}>
                       <motion.div
                         aria-hidden
@@ -81,7 +90,7 @@ export default function Experience() {
                         className="absolute inset-0"
                         style={{ background: `linear-gradient(135deg, ${row.from}, ${row.to})` }}
                       />
-                      <motion.div variants={ink} transition={{ duration: 0.3, ease }} className="relative z-10 px-5 py-7">
+                      <div className="relative z-10 px-5 py-7 transition-colors duration-300 group-hover:text-[#0a0a0a] group-focus-within:text-[#0a0a0a]">
                         <div className="flex flex-col justify-between gap-2 sm:flex-row sm:gap-6">
                           <div>
                             <p className="font-display text-2xl font-light leading-tight md:text-3xl">{row.role}</p>
@@ -104,8 +113,9 @@ export default function Experience() {
                             ))}
                           </dl>
                         )}
-                      </motion.div>
                       </div>
+                      </div>
+                      </ScrollPlace>
                     </motion.li>
                   );
                 })}

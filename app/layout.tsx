@@ -55,6 +55,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Runs before first paint: stored choice wins, otherwise follow the OS.
+const themeScript = `try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="dark"}`;
+
 const fontVars = [archivo, bricolage, dmMono, deva, arab, guru, guj, beng, tamil, thai]
   .map((f) => f.variable)
   .join(" ");
@@ -63,12 +66,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={fontVars}>
+    <html lang="en" className={fontVars} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
         <Providers>
           <SmoothScroll />
           <SideRail />
-          <main className="md:pl-[76px]">{children}</main>
+          <main className="overflow-x-clip md:pl-[76px]">{children}</main>
         </Providers>
       </body>
     </html>

@@ -14,8 +14,7 @@ import {
 
 const FACES = ["", "rotateY(90deg)", "rotateY(180deg)", "rotateY(-90deg)", "rotateX(90deg)", "rotateX(-90deg)"];
 
-const AUTO = { x: 0.012, y: 0.018 };
-const MAX_SPEED = 1.2;
+const SPRING = { stiffness: 300, damping: 30 };
 
 function Face({ face, half, burst, border, fill }: {
   face: string;
@@ -63,13 +62,23 @@ export default function OrbitObject({ size = 340, scroll }: { size?: number; scr
   const inView = useInView(ref);
   const reduced = useReducedMotion();
 
-  const rotX = useMotionValue(-20);
-  const rotY = useMotionValue(25);
   const innerX = useMotionValue(0);
   const innerY = useMotionValue(0);
   const fallback = useMotionValue(0);
-  const scrolled = scroll ?? fallback;
-  const totalY = useTransform([rotY, scrolled], ([y, s]) => (y as number) + (s as number) * 540);
+  const scrolled = useSpring(scroll ?? fallback, SPRING);
+  const k = reduced ? 0 : 1;
+
+  // Baseline orientation is driven by scroll; the visitor's drag is a separate offset layered on top.
+  const baseX = useTransform(scrolled, [0, 1], [-20, -20 + 240 * k]);
+  const baseY = useTransform(scrolled, [0, 1], [25, 25 + 540 * k]);
+  const driftX = useMotionValue(0);
+  const driftY = useMotionValue(0);
+  const dragRawX = useMotionValue(0);
+  const dragRawY = useMotionValue(0);
+  const dragX = useSpring(dragRawX, SPRING);
+  const dragY = useSpring(dragRawY, SPRING);
+  const rotX = useTransform([baseX, dragX, driftX], ([b, d, f]) => (b as number) + (d as number) + (f as number));
+  const totalY = useTransform([baseY, dragY, driftY], ([b, d, f]) => (b as number) + (d as number) + (f as number));
   const scale = useTransform(scrolled, [0, 1], [1, 0.7]);
 
   const leanX = useSpring(0, { stiffness: 120, damping: 14 });
@@ -77,20 +86,15 @@ export default function OrbitObject({ size = 340, scroll }: { size?: number; scr
   const burst = useSpring(0, { stiffness: 110, damping: 11 });
   const innerBurst = useTransform(burst, (b) => b * 1.4);
 
-  const velocity = useRef({ x: AUTO.x, y: AUTO.y });
-  const drag = useRef({ active: false, x: 0, y: 0, t: 0, moved: 0 });
+  const drag = useRef({ active: false, x: 0, y: 0, moved: 0 });
   const burstTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const [grabbing, setGrabbing] = useState(false);
 
   useAnimationFrame((_, delta) => {
-    if (reduced || (!inView && !drag.current.active)) return;
-    const v = velocity.current;
+    if (reduced || !inView) return;
     if (!drag.current.active) {
-      const ease = Math.min(1, delta * 0.0015);
-      v.x += (AUTO.x - v.x) * ease;
-      v.y += (AUTO.y - v.y) * ease;
-      rotX.set(rotX.get() + v.x * delta);
-      rotY.set(rotY.get() + v.y * delta);
+      driftX.set(driftX.get() + delta * 0.002);
+      driftY.set(driftY.get() + delta * 0.004);
     }
     innerX.set(innerX.get() - delta * 0.03);
     innerY.set(innerY.get() + delta * 0.022);
@@ -99,7 +103,7 @@ export default function OrbitObject({ size = 340, scroll }: { size?: number; scr
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (reduced) return;
     e.currentTarget.setPointerCapture(e.pointerId);
-    drag.current = { active: true, x: e.clientX, y: e.clientY, t: performance.now(), moved: 0 };
+    drag.current = { active: true, x: e.clientX, y: e.clientY, moved: 0 };
     setGrabbing(true);
   };
 
@@ -107,18 +111,13 @@ export default function OrbitObject({ size = 340, scroll }: { size?: number; scr
     if (reduced) return;
     const d = drag.current;
     if (d.active) {
-      const now = performance.now();
-      const dt = Math.max(1, now - d.t);
       const dx = e.clientX - d.x;
       const dy = e.clientY - d.y;
       d.moved += Math.abs(dx) + Math.abs(dy);
-      rotY.set(rotY.get() + dx * 0.45);
-      rotX.set(rotX.get() - dy * 0.45);
-      const clamp = (n: number) => Math.max(-MAX_SPEED, Math.min(MAX_SPEED, n));
-      velocity.current = { x: clamp((-dy * 0.45) / dt), y: clamp((dx * 0.45) / dt) };
+      dragRawY.set(dragRawY.get() + dx * 0.45);
+      dragRawX.set(dragRawX.get() - dy * 0.45);
       d.x = e.clientX;
       d.y = e.clientY;
-      d.t = now;
       return;
     }
     const rect = e.currentTarget.getBoundingClientRect();
@@ -131,6 +130,13 @@ export default function OrbitObject({ size = 340, scroll }: { size?: number; scr
     if (!d.active) return;
     d.active = false;
     setGrabbing(false);
+    // Drop whole extra turns first so the cube unwinds the short way, then hand control back to scroll.
+    for (const [raw, spring] of [[dragRawX, dragX], [dragRawY, dragY]] as const) {
+      const turns = Math.round(raw.get() / 360) * 360;
+      raw.set(raw.get() - turns);
+      spring.jump(spring.get() - turns);
+      raw.set(0);
+    }
     if (d.moved < 6) {
       burst.set(1);
       clearTimeout(burstTimer.current);
@@ -162,16 +168,16 @@ export default function OrbitObject({ size = 340, scroll }: { size?: number; scr
       >
         <Cube
           size={size}
-          border="rgba(244,239,230,0.35)"
-          fill="linear-gradient(135deg, rgba(214,255,63,0.07), rgba(244,239,230,0.02))"
+          border="color-mix(in srgb, var(--paper) 35%, transparent)"
+          fill="linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), color-mix(in srgb, var(--paper) 3%, transparent))"
           burst={burst}
           rotateX={rotX}
           rotateY={totalY}
         />
         <Cube
           size={size / 2}
-          border="rgba(214,255,63,0.7)"
-          fill="rgba(214,255,63,0.06)"
+          border="color-mix(in srgb, var(--accent) 70%, transparent)"
+          fill="color-mix(in srgb, var(--accent) 10%, transparent)"
           burst={innerBurst}
           rotateX={innerX}
           rotateY={innerY}

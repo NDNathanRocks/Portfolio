@@ -2,6 +2,7 @@
 
 import { snap } from "@/lib/motion";
 import Magnetic from "./Magnetic";
+import ThemeToggle from "./ThemeToggle";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -77,6 +78,7 @@ export default function SideRail() {
             </Magnetic>
           ))}
         </nav>
+        <ThemeToggle />
         <div aria-hidden className="relative flex h-24 w-px justify-center bg-paper/20">
           <motion.div className="absolute inset-x-0 top-0 h-full origin-top bg-accent" style={{ scaleY: progress }} />
           <motion.span
@@ -89,12 +91,13 @@ export default function SideRail() {
       <header className="sticky top-0 z-40 border-b border-paper/15 bg-ink/85 backdrop-blur md:hidden">
         <div className="flex items-center justify-between px-6 py-4">
           <Anchor href={home ? "#top" : "/"} className={linkClass()}>ND</Anchor>
-          <nav aria-label="Primary" className="flex gap-5">
+          <nav aria-label="Primary" className="flex items-center gap-5">
             {sections.map((s) => (
               <Anchor key={s.id} href={href(s.id)} className={linkClass(s.id)}>
                 {s.label}
               </Anchor>
             ))}
+            <ThemeToggle className="-my-3 -mr-3" />
           </nav>
         </div>
         <motion.div aria-hidden className="h-px origin-left bg-accent" style={{ scaleX: progress }} />

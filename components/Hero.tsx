@@ -49,7 +49,7 @@ export default function Hero() {
         <span>Vancouver, BC</span>
       </div>
 
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[4%] opacity-35 sm:opacity-60 lg:pr-[7%] lg:opacity-100">
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-20 flex items-center pr-[4%] opacity-35 sm:opacity-60 lg:pr-[7%] lg:opacity-100">
         <div className="pointer-events-auto origin-right scale-[0.62] sm:scale-75 lg:scale-100">
           <OrbitObject scroll={scrollYProgress} />
         </div>
