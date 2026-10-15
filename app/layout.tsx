@@ -14,7 +14,7 @@ import {
 import Providers from "@/components/Providers";
 import SideRail from "@/components/SideRail";
 import SmoothScroll from "@/components/SmoothScroll";
-import { siteDescription, siteTitle, siteUrl } from "@/lib/site";
+import { previewImage, siteDescription, siteTitle, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
@@ -40,16 +40,18 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   openGraph: {
     type: "website",
-    url: "/",
+    url: siteUrl,
     siteName: "Nathan Nicholas D'Souza",
     title: siteTitle,
     description: siteDescription,
     locale: "en_CA",
+    images: [{ url: previewImage, width: 1200, height: 630, alt: siteTitle }],
   },
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
+    images: [previewImage],
   },
 };
 
