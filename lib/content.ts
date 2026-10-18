@@ -14,6 +14,7 @@ export type Metric = { value: number; prefix?: string; suffix?: string; label: s
 export type Demo =
   | { kind: "client"; note: string }
   | { kind: "iframe"; note: string; src?: string }
+  | { kind: "embed"; note: string; src: string; origin: string }
   | { kind: "confidential" };
 
 export type Project = {
@@ -23,6 +24,8 @@ export type Project = {
   meta: string;
   stack: string[];
   repo?: string;
+  liveUrl?: string;
+  description?: string;
   from: string;
   to: string;
   origin: string;
@@ -33,6 +36,28 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    id: "aegis-ai-race",
+    title: "Aegis AI Race",
+    subtitle: "Production AI Platform vs. Naive Wrapper",
+    meta: "Flagship · Live",
+    description:
+      "A live split-screen benchmarking engine where a naive 70B LLM wrapper races against a production LangGraph pipeline featuring Hybrid RAG (PostgreSQL pgvector + BM25 with Reciprocal Rank Fusion), Redis Semantic Caching (7.3ms cache hits), complexity-based Semantic Routing, a deterministic Critic agent, and strict Pydantic schema enforcement.",
+    stack: ["Next.js", "FastAPI", "LangGraph", "Hybrid RAG (pgvector + BM25)", "Redis Semantic Cache", "Pydantic", "ONNX (FastEmbed)", "Docker", "Playwright"],
+    repo: "https://github.com/NDNathanRocks/aegis-ai-race",
+    liveUrl: "https://aegis-ai-race.vercel.app/",
+    from: "#38bdf8",
+    to: "#818cf8",
+    origin: "0% 50%",
+    layout: "md:col-span-12 md:row-span-3",
+    titleClass: "text-[clamp(3rem,8vw,7.5rem)]",
+    demo: {
+      kind: "embed",
+      note: "The live race arena, embedded. The backend runs on a free tier, so the first request after a quiet period can take a moment to wake up.",
+      src: "https://aegis-ai-race.vercel.app/?embed=true",
+      origin: "https://aegis-ai-race.vercel.app",
+    },
+  },
   {
     id: "clarity",
     title: "Clarity",

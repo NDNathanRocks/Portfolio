@@ -61,18 +61,39 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             ))}
           </ul>
         </Enter>
-        {project.repo && (
+        {project.description && (
           <Enter step={3}>
-            <Magnetic className="mt-8">
-              <a
-                href={project.repo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-block rounded-full border border-paper/30 px-7 py-3 transition-colors duration-200 hover:border-accent hover:bg-accent hover:text-ink ${mono}`}
-              >
-                View on GitHub ↗
-              </a>
-            </Magnetic>
+            <p className="mt-8 max-w-[70ch] text-lg text-paper/80">{project.description}</p>
+          </Enter>
+        )}
+        {(project.liveUrl || project.repo) && (
+          <Enter step={4}>
+            <div className="mt-8 flex flex-wrap gap-4">
+              {project.liveUrl && (
+                <Magnetic>
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`inline-block rounded-full border border-accent bg-accent px-7 py-3 text-ink transition-opacity duration-200 hover:opacity-85 ${mono}`}
+                  >
+                    Open Full-Screen Live App ↗
+                  </a>
+                </Magnetic>
+              )}
+              {project.repo && (
+                <Magnetic>
+                  <a
+                    href={project.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`inline-block rounded-full border border-paper/30 px-7 py-3 transition-colors duration-200 hover:border-accent hover:bg-accent hover:text-ink ${mono}`}
+                  >
+                    {project.liveUrl ? "View Source on GitHub ↗" : "View on GitHub ↗"}
+                  </a>
+                </Magnetic>
+              )}
+            </div>
           </Enter>
         )}
       </header>

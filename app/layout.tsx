@@ -14,6 +14,7 @@ import {
 import Providers from "@/components/Providers";
 import SideRail from "@/components/SideRail";
 import SmoothScroll from "@/components/SmoothScroll";
+import WarmUp from "@/components/WarmUp";
 import { previewImage, siteDescription, siteTitle, siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -72,6 +73,7 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
+          <WarmUp />
           <SmoothScroll />
           <SideRail />
           <main className="overflow-x-clip md:pl-[76px]">{children}</main>
