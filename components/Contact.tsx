@@ -1,5 +1,6 @@
 import ContactForm from "./ContactForm";
 import HelloRotator from "./HelloRotator";
+import Landing, { LandingCube } from "./story/Landing";
 import { profile } from "@/lib/content";
 import { resumePath } from "@/lib/site";
 
@@ -8,7 +9,7 @@ const link = "underline-offset-4 hover:underline focus-visible:underline";
 
 export default function Contact() {
   return (
-    <section id="contact" className="overflow-hidden bg-accent px-6 pb-10 pt-20 text-ink md:px-14 md:pt-24">
+    <Landing id="contact" className="relative z-[1] overflow-hidden bg-accent px-6 pb-10 pt-20 text-ink md:px-14 md:pt-24">
       <HelloRotator />
 
       <div className="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 lg:grid-cols-12">
@@ -44,7 +45,10 @@ export default function Contact() {
         </div>
       </div>
 
-      <p className={`mt-20 ${mono}`}>&copy; 2026 {profile.fullName}</p>
-    </section>
+      <div className="mt-20 flex items-end justify-between gap-6">
+        <p className={mono}>&copy; 2026 {profile.fullName}</p>
+        <LandingCube />
+      </div>
+    </Landing>
   );
 }

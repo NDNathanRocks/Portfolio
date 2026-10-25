@@ -57,7 +57,16 @@ function Cube({ size, border, fill, burst, rotateX, rotateY }: {
   );
 }
 
-export default function OrbitObject({ size = 340, scroll }: { size?: number; scroll?: MotionValue<number> }) {
+// `boost` lets a parent push the faces apart (or pull them back together) from scroll, on top of the click burst.
+export default function OrbitObject({
+  size = 340,
+  scroll,
+  boost,
+}: {
+  size?: number;
+  scroll?: MotionValue<number>;
+  boost?: MotionValue<number>;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
   const reduced = useReducedMotion();
@@ -84,7 +93,8 @@ export default function OrbitObject({ size = 340, scroll }: { size?: number; scr
   const leanX = useSpring(0, { stiffness: 120, damping: 14 });
   const leanY = useSpring(0, { stiffness: 120, damping: 14 });
   const burst = useSpring(0, { stiffness: 110, damping: 11 });
-  const innerBurst = useTransform(burst, (b) => b * 1.4);
+  const totalBurst = useTransform([burst, boost ?? fallback], ([b, s]) => (b as number) + (s as number));
+  const innerBurst = useTransform(totalBurst, (b) => b * 1.4);
 
   const drag = useRef({ active: false, x: 0, y: 0, moved: 0 });
   const burstTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -170,7 +180,7 @@ export default function OrbitObject({ size = 340, scroll }: { size?: number; scr
           size={size}
           border="color-mix(in srgb, var(--paper) 35%, transparent)"
           fill="linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), color-mix(in srgb, var(--paper) 3%, transparent))"
-          burst={burst}
+          burst={totalBurst}
           rotateX={rotX}
           rotateY={totalY}
         />

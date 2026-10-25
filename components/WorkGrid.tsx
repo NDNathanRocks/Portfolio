@@ -3,13 +3,14 @@ import BlurIn from "./BlurIn";
 import ProjectTile from "./ProjectTile";
 import Reveal from "./Reveal";
 import VelocityMarquee from "./VelocityMarquee";
+import WorkStage from "./story/WorkStage";
 import { projects } from "@/lib/content";
 
 const words = ["AI", "Full-Stack", "Computer Vision", "Data Pipelines", "ETL", "Neural Networks"];
 
 export default function WorkGrid() {
   return (
-    <section id="work" className="scroll-mt-4 py-24 md:py-32">
+    <section id="work" data-act="corridor" className="scroll-mt-4 py-24 md:py-32">
       <VelocityMarquee speed={1.4} className="mb-20 select-none md:mb-28" >
         {words.map((w) => (
           <span key={w} className="flex items-center">
@@ -33,12 +34,16 @@ export default function WorkGrid() {
             <BlurIn text={`${String(projects.length).padStart(2, "0")} selected`} />
           </span>
         </div>
-        <ScrollSkew className="grid grid-cols-1 gap-5 md:auto-rows-[130px] md:grid-cols-12">
-          {projects.map((project, i) => (
-            <ProjectTile key={project.id} project={project} index={i} />
-          ))}
-        </ScrollSkew>
       </div>
+      <WorkStage>
+        <div className="px-6 md:px-14">
+          <ScrollSkew className="grid grid-cols-1 gap-5 md:auto-rows-[130px] md:grid-cols-12">
+            {projects.map((project, i) => (
+              <ProjectTile key={project.id} project={project} index={i} />
+            ))}
+          </ScrollSkew>
+        </div>
+      </WorkStage>
     </section>
   );
 }

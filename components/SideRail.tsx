@@ -6,7 +6,8 @@ import ThemeToggle from "./ThemeToggle";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { acts } from "@/lib/story";
 
 const sections = [
   { id: "work", label: "Work" },
@@ -21,6 +22,7 @@ export default function SideRail() {
   const pathname = usePathname();
   const home = pathname === "/";
   const [active, setActive] = useState<string | null>(null);
+  const [act, setAct] = useState<number | null>(null);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, snap);
   const dotY = useTransform(progress, [0, 1], [0, 87]);
@@ -40,6 +42,35 @@ export default function SideRail() {
     return () => {
       observer.disconnect();
       setActive(null);
+    };
+  }, [home]);
+
+  // Depth gauge: the current act is the last [data-act] element whose top has crossed the middle of the screen.
+  useEffect(() => {
+    if (!home) return;
+    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-act]"));
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      let current: string | null = null;
+      for (const el of els) {
+        if (!el.offsetParent && el.getClientRects().length === 0) continue;
+        if (el.getBoundingClientRect().top <= window.innerHeight / 2) current = el.dataset.act ?? current;
+      }
+      const i = acts.findIndex((a) => a.id === current);
+      setAct(i < 0 ? 0 : i);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      setAct(null);
     };
   }, [home]);
 
@@ -79,6 +110,22 @@ export default function SideRail() {
           ))}
         </nav>
         <ThemeToggle />
+        <div aria-hidden className={`relative h-28 w-4 overflow-hidden ${labelClass} text-[10px]`}>
+          <AnimatePresence initial={false}>
+            {act !== null && (
+              <motion.span
+                key={act}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -24 }}
+                transition={snap}
+                className={`absolute inset-0 flex items-center justify-center whitespace-nowrap text-paper/60 ${vertical}`}
+              >
+                <span className="text-accent">{String(act + 1).padStart(2, "0")}</span>&nbsp;{acts[act].label}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
         <div aria-hidden className="relative flex h-24 w-px justify-center bg-paper/20">
           <motion.div className="absolute inset-x-0 top-0 h-full origin-top bg-accent" style={{ scaleY: progress }} />
           <motion.span

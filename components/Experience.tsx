@@ -1,6 +1,6 @@
 "use client";
 
-import ScrollPlace from "./ScrollPlace";
+import DepthPlace from "./story/DepthPlace";
 import { easeDrawer } from "@/lib/motion";
 import { spotlightMove } from "@/lib/spotlight";
 import BlurIn from "./BlurIn";
@@ -8,25 +8,24 @@ import { useRef } from "react";
 import { motion, useScroll, useSpring, type Variants } from "framer-motion";
 import CountUp from "./CountUp";
 import Reveal from "./Reveal";
-import VelocityMarquee from "./VelocityMarquee";
 import { awards, experience, skills } from "@/lib/content";
 
 const mono = "font-mono text-xs uppercase tracking-[0.14em]";
 const ease = easeDrawer;
 
-const chips = skills.flatMap((s) => s.items.split(", "));
-const rowA = chips.filter((_, i) => i % 2 === 0);
-const rowB = chips.filter((_, i) => i % 2 === 1);
-
-function Chip({ label }: { label: string }) {
-  return (
-    <span
-      className={`mx-2 whitespace-nowrap rounded-full border border-paper/25 px-5 py-2.5 transition-colors hover:border-accent hover:bg-accent hover:text-ink ${mono}`}
-    >
-      {label}
-    </span>
-  );
-}
+// Awards and stack rows flip up off the page, one after another.
+const flip: Variants = {
+  hidden: { opacity: 0, rotateX: -40, y: 18 },
+  shown: (i: number) => ({ opacity: 1, rotateX: 0, y: 0, transition: { duration: 0.6, delay: i * 0.07, ease: easeDrawer } }),
+};
+const flipProps = (i: number) => ({
+  custom: i,
+  variants: flip,
+  initial: "hidden",
+  whileInView: "shown",
+  viewport: { once: true, margin: "-60px" },
+  style: { transformPerspective: 800, transformOrigin: "50% 100%" },
+});
 
 export default function Experience() {
   const listRef = useRef<HTMLUListElement>(null);
@@ -39,7 +38,7 @@ export default function Experience() {
   });
 
   return (
-    <section id="experience" className="scroll-mt-4 py-24 md:py-32">
+    <section id="experience" data-act="path" className="scroll-mt-4 py-24 md:py-32">
       <div className="px-6 md:px-14">
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 lg:grid-cols-12">
           <div className="self-start lg:sticky lg:top-24 lg:col-span-4">
@@ -81,7 +80,7 @@ export default function Experience() {
                           transition={{ duration: 0.3, ease: easeDrawer }}
                         />
                       </motion.span>
-                      <ScrollPlace x={i % 2 === 0 ? 36 : -36} y={24}>
+                      <DepthPlace x={i % 2 === 0 ? 36 : -36}>
                       <div className="spotlight relative overflow-hidden" onPointerMove={spotlightMove}>
                       <motion.div
                         aria-hidden
@@ -115,7 +114,7 @@ export default function Experience() {
                         )}
                       </div>
                       </div>
-                      </ScrollPlace>
+                      </DepthPlace>
                     </motion.li>
                   );
                 })}
@@ -126,42 +125,29 @@ export default function Experience() {
               <div>
                 <h3 className={`mb-4 text-accent ${mono}`}>Awards</h3>
                 <ul className="space-y-5">
-                  {awards.map((a) => (
-                    <li key={a.title}>
+                  {awards.map((a, i) => (
+                    <motion.li key={a.title} {...flipProps(i)}>
                       <p className="font-display text-xl">{a.title}</p>
                       <p className="text-paper/70">{a.detail}</p>
                       <p className={`mt-1 text-paper/60 ${mono}`}>{a.date}</p>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </div>
               <div>
                 <h3 className={`mb-4 text-accent ${mono}`}>Stack</h3>
                 <ul className="space-y-5">
-                  {skills.map((s) => (
-                    <li key={s.group}>
+                  {skills.map((s, i) => (
+                    <motion.li key={s.group} {...flipProps(i)}>
                       <p className="font-display text-xl">{s.group}</p>
                       <p className="text-paper/70">{s.items}</p>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div aria-hidden className="mt-24 space-y-4">
-        <VelocityMarquee speed={1.2} pauseOnHover>
-          {rowA.map((c) => (
-            <Chip key={c} label={c} />
-          ))}
-        </VelocityMarquee>
-        <VelocityMarquee speed={-1.2} pauseOnHover>
-          {rowB.map((c) => (
-            <Chip key={c} label={c} />
-          ))}
-        </VelocityMarquee>
       </div>
     </section>
   );
