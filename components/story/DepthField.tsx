@@ -71,6 +71,8 @@ export default function DepthField() {
     };
     if (!small && !reduced) window.addEventListener("pointermove", onMove, { passive: true });
 
+    const work = document.getElementById("work");
+    const contact = document.getElementById("contact");
     let lastY = window.scrollY;
     let speed = 0;
     let phase = 0;
@@ -91,7 +93,16 @@ export default function DepthField() {
       const f = Math.min(w, h) * 0.55;
       const cx = w / 2;
       const cy = h / 2;
+      // Nothing shows through the opaque contact block, so skip the work while it fills the screen.
+      const cover = contact?.getBoundingClientRect();
+      if (cover && cover.top <= 0 && cover.bottom >= h) {
+        if (!reduced) raf = requestAnimationFrame(frame);
+        return;
+      }
       ctx.clearRect(0, 0, w, h);
+      // Past the corridor the field sits behind body text, so it fades back to a quiet 30%.
+      const workEnd = work ? work.getBoundingClientRect().bottom : Infinity;
+      const quiet = workEnd < h ? Math.max(0.3, workEnd / h) : 1;
 
       // Hero floor: a grid receding to a horizon, fading out over the first screen of scroll.
       const floor = Math.max(0, 1 - y / (h * 0.9)) * (small ? 0.16 : 0.22);
@@ -130,7 +141,7 @@ export default function DepthField() {
         const py = cy + ((s.y - pointer.y * 0.12) / s.z) * f;
         if (px < -20 || px > w + 20 || py < -20 || py > h + 20) continue;
         const near = 1 - s.z;
-        const alpha = Math.min(1, near * 1.1) * Math.min(1, (1 - s.z) * 6) * (s.hot ? 0.9 : 0.55);
+        const alpha = Math.min(1, near * 1.1) * Math.min(1, (1 - s.z) * 6) * (s.hot ? 0.9 : 0.55) * quiet;
         const size = near * 2 + 0.4;
         const c = s.hot ? color.accent : color.paper;
         const trail = Math.abs(dz) > 0.004 ? dz * 3 : 0;

@@ -9,7 +9,7 @@ const link = "underline-offset-4 hover:underline focus-visible:underline";
 
 export default function Contact() {
   return (
-    <Landing id="contact" className="relative z-[1] overflow-hidden bg-accent px-6 pb-10 pt-20 text-ink md:px-14 md:pt-24">
+    <Landing id="contact" className="overflow-hidden bg-accent px-6 pb-10 pt-20 text-ink md:px-14 md:pt-24">
       <HelloRotator />
 
       <div className="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 lg:grid-cols-12">

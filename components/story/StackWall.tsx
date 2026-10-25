@@ -12,7 +12,10 @@ const mono = "font-mono text-xs uppercase tracking-[0.14em]";
 const chips = skills.flatMap((s) => s.items.split(", "));
 const rowA = chips.filter((_, i) => i % 2 === 0);
 const rowB = chips.filter((_, i) => i % 2 === 1);
-const rowC = [...new Set(projects.flatMap((p) => p.stack))].filter((s) => !chips.includes(s));
+// Third row: project tech not already listed above. "ReactJS" vs "React" and similar count as the same thing.
+const norm = (s: string) => s.toLowerCase().replace(/\.?js$/, "").replace(/[^a-z0-9+#]/g, "");
+const known = new Set(chips.map(norm));
+const rowC = [...new Set(projects.flatMap((p) => p.stack))].filter((s) => !known.has(norm(s)));
 
 function Chip({ label }: { label: string }) {
   return (

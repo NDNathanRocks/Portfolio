@@ -8,7 +8,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useMotionValueEvent, useTransform, type MotionValue, type Variants } from "framer-motion";
 import { projects, type Project } from "@/lib/content";
-import { corridorGap, pin } from "@/lib/story";
+import { corridorGap } from "@/lib/story";
 
 const MotionLink = motion.create(Link);
 const mono = "font-mono text-xs uppercase tracking-[0.14em]";
@@ -32,8 +32,6 @@ function Card({ project, index, focus, onFocusCard }: {
   const x = useTransform(t, [-3, 0, 1], [`${side * 8}vw`, `${side * 20}vw`, `${side * 48}vw`]);
   const rotateY = useTransform(t, [-3, 0, 1], [side * -4, side * -8, side * -24]);
   const opacity = useTransform(t, [-3, -1.4, -0.2, 0.25, 0.7], [0, 0.45, 1, 1, 0]);
-  const blur = useTransform(t, [-3, -1, -0.25, 0.2, 0.7], [10, 4, 0, 0, 6]);
-  const filter = useTransform(blur, (b) => (b < 0.2 ? "none" : `blur(${b.toFixed(1)}px)`));
   const pointerEvents = useTransform(t, (v) => (Math.abs(v) < 0.45 ? "auto" : "none"));
 
   const wash: Variants = {
@@ -45,7 +43,7 @@ function Card({ project, index, focus, onFocusCard }: {
   return (
     <motion.div
       className="absolute left-1/2 top-1/2 h-[min(62vh,560px)] w-[min(44vw,620px)] -translate-x-1/2 -translate-y-1/2"
-      style={{ x, z, rotateY, opacity, filter, pointerEvents }}
+      style={{ x, z, rotateY, opacity, pointerEvents }}
     >
       <MotionLink
         href={`/projects/${id}`}
@@ -139,7 +137,7 @@ function Hud({ progress, focus }: { progress: MotionValue<number>; focus: Motion
 }
 
 // Act 3. The camera flies down a corridor of projects; each card comes out of the dark, sharpens in focus, then sweeps past.
-export default function WorkCorridor() {
+export default function WorkCorridor({ vh }: { vh: number }) {
   const sceneRef = useRef<HTMLDivElement>(null);
   const focusCard = (i: number) => {
     // Keyboard users tabbing through the cards: move the camera to the focused one.
@@ -154,7 +152,7 @@ export default function WorkCorridor() {
 
   return (
     <div ref={sceneRef}>
-      <StoryScene vh={count * pin.corridorPerCard + pin.corridorTail}>
+      <StoryScene vh={vh}>
         {(progress) => <Corridor progress={progress} onFocusCard={focusCard} />}
       </StoryScene>
     </div>
