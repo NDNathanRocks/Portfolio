@@ -2,6 +2,7 @@
 
 import DepthPlace from "./story/DepthPlace";
 import ActKicker from "./story/ActKicker";
+import Road from "./story/Road";
 import Scrim from "./story/Scrim";
 import WarpFlash from "./story/WarpFlash";
 import { taglines } from "@/lib/story";
@@ -58,9 +59,10 @@ export default function Experience() {
 
           <div className="lg:col-span-7 lg:col-start-6">
             <div className="relative pl-8 md:pl-10">
-              <div aria-hidden className="absolute bottom-0 left-0 top-0 w-px bg-paper/15">
+              <div aria-hidden className="absolute bottom-0 left-0 top-0 w-px bg-paper/15 md:hidden">
                 <motion.div className="h-full origin-top bg-accent" style={{ scaleY: line }} />
               </div>
+              <Road progress={line} scroll={scrollYProgress} />
               <ul ref={listRef}>
                 {experience.map((row, i) => {
                   const origin = i % 2 === 0 ? "100% 0%" : "0% 100%";
@@ -71,6 +73,14 @@ export default function Experience() {
                       whileHover="hover"
                       className="group relative border-t border-paper/15 last:border-b"
                     >
+                      <motion.span
+                        aria-hidden
+                        initial={{ scale: 1, opacity: 0 }}
+                        whileInView={{ scale: 3.2, opacity: [0.8, 0] }}
+                        viewport={{ once: true, margin: "-45% 0px -45% 0px" }}
+                        transition={{ duration: 0.9, ease: easeDrawer }}
+                        className="pointer-events-none absolute left-[-36px] top-[38px] z-10 hidden h-[9px] w-[9px] rounded-full border border-accent md:left-[-44px] md:block"
+                      />
                       <motion.span
                         aria-hidden
                         initial={{ scale: 1 }}
