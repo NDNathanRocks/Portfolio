@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 
-// The light theme's "daylight": a pale sky that warms from morning blue to late-afternoon peach as you descend, a sun
+// The light theme's "sunset": a pale sky that warms from dusk lavender to glowing apricot as you descend, a sun
 // glow that lifts away from the hero, and soft clouds drifting at different speeds. Fixed behind everything; invisible
 // in dark mode (see `.sky` in globals.css), so dark stays the space theme.
 export default function Sky() {
@@ -19,7 +19,7 @@ export default function Sky() {
         style={{ opacity: warm, background: "linear-gradient(180deg, var(--sky-b) 0%, transparent 70%)" }}
       />
       <motion.div
-        className="absolute right-[6%] top-[8%] h-[70vmin] w-[70vmin] rounded-full"
+        className="absolute right-[8%] top-[30%] h-[70vmin] w-[70vmin] rounded-full"
         style={{
           y: sunY,
           opacity: sunOpacity,

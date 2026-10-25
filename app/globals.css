@@ -21,11 +21,11 @@
   --s2: #0d0d0d;
   --soft: #aeaaa4;
   --mute: #96938e;
-  --edge: 255 255 255;
-  --edge-hi: 0.07;
   --sky-a: transparent;
   --sky-b: transparent;
   --sun: transparent;
+  --edge: 255 255 255;
+  --edge-hi: 0.07;
   color-scheme: dark;
 }
 
@@ -38,11 +38,11 @@
   --s2: #efe9dc;
   --soft: #4a463f;
   --mute: #5c5850;
+  --sky-a: #cfd0ea;
+  --sky-b: #f8b996;
+  --sun: rgb(255 140 70 / 0.85);
   --edge: 0 0 0;
   --edge-hi: 0.8;
-  --sky-a: #d3e6f1;
-  --sky-b: #f7dcc2;
-  --sun: rgb(255 226 150 / 0.9);
   color-scheme: light;
 }
 
@@ -82,7 +82,7 @@ body {
   }
 }
 
-/* Daylight (light theme only): see components/story/Sky.tsx. */
+/* Sunset (light theme only): see components/story/Sky.tsx. */
 .sky {
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -92,7 +92,7 @@ body {
 }
 .cloud {
   border-radius: 9999px;
-  background: radial-gradient(closest-side, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0));
+  background: radial-gradient(closest-side, rgb(255 190 170 / 0.6), rgb(255 190 170 / 0));
   animation: drift linear infinite;
 }
 @keyframes drift {

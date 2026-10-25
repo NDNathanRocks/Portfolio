@@ -60,7 +60,9 @@ export default function Hero() {
   const cubeX = useTransform(dive, gated([0.12, 0.6], ["0vw", "-30vw"]));
   const cubeScale = useTransform(dive, gated([0.2, 0.88], [1, 7]));
   const cubeOpacity = useTransform(dive, gated([0.72, 0.9], [1, 0]));
-  const cubeBoost = useTransform(dive, gated([0.35, 0.88], [0, 2.4]));
+  // Desktop: the burst belongs to the dive. Phones have no pin, so the faces scatter as the hero scrolls away instead.
+  const desktopBoost = transform([0.35, 0.88], [0, 2.4]);
+  const cubeBoost = useTransform([dive, drift], ([p, d]) => (live.current ? desktopBoost(p as number) : still * Math.min(1, (d as number) * 1.6) * 2));
   const cubePointer = useTransform(dive, (v) => (live.current && v > 0.2 ? "none" : "auto"));
 
   return (
