@@ -71,7 +71,7 @@ export default function Hero() {
       className="relative md:motion-safe:h-[var(--hero-h)]"
       style={{ "--hero-h": `${pin.heroDesktop}vh` } as React.CSSProperties}
     >
-      <div aria-hidden data-act="dive" className="pointer-events-none absolute inset-x-0 bottom-0 top-[35%] hidden md:motion-safe:block" />
+      <div aria-hidden id="dive" data-act="dive" className="pointer-events-none absolute inset-x-0 bottom-0 top-[35%] hidden md:motion-safe:block" />
       <div className="relative flex min-h-screen flex-col justify-between overflow-hidden px-6 pb-10 pt-10 md:px-14 md:pt-14 md:motion-safe:sticky md:motion-safe:top-0 md:motion-safe:h-screen">
         <motion.div style={{ opacity: footerOpacity }} className={`relative z-10 flex justify-between ${label}`}>
           <span>Portfolio &mdash; 2026</span>

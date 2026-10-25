@@ -68,11 +68,26 @@ export default function DepthField() {
     window.addEventListener("resize", resize);
 
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+    // Cursor light: a soft pool that follows the pointer and brightens the stars it passes over (desktop with motion only).
+    const spot = { x: -999, y: -999, tx: -999, ty: -999, a: 0, ta: 0 };
     const onMove = (e: PointerEvent) => {
       pointer.tx = e.clientX / w - 0.5;
       pointer.ty = e.clientY / h - 0.5;
+      if (spot.a < 0.02) {
+        spot.x = e.clientX;
+        spot.y = e.clientY;
+      }
+      spot.tx = e.clientX;
+      spot.ty = e.clientY;
+      spot.ta = 1;
     };
-    if (!small && !reduced) window.addEventListener("pointermove", onMove, { passive: true });
+    const onLeave = () => {
+      spot.ta = 0;
+    };
+    if (!small && !reduced) {
+      window.addEventListener("pointermove", onMove, { passive: true });
+      document.documentElement.addEventListener("pointerleave", onLeave);
+    }
 
     const work = document.getElementById("work");
     const contact = document.getElementById("contact");
@@ -90,6 +105,9 @@ export default function DepthField() {
       lastY = y;
       pointer.x += (pointer.tx - pointer.x) * 0.05;
       pointer.y += (pointer.ty - pointer.y) * 0.05;
+      spot.x += (spot.tx - spot.x) * 0.18;
+      spot.y += (spot.ty - spot.y) * 0.18;
+      spot.a += (spot.ta - spot.a) * 0.1;
 
       // Scrolling down flies forward, scrolling up backs out; a slow idle drift keeps it alive when still.
       const dz = reduced ? 0 : -(0.0007 + Math.max(-0.03, Math.min(0.03, speed * 0.0003))) * k;
@@ -103,6 +121,13 @@ export default function DepthField() {
         return;
       }
       ctx.clearRect(0, 0, w, h);
+      if (spot.a > 0.02) {
+        const glow = ctx.createRadialGradient(spot.x, spot.y, 0, spot.x, spot.y, 280);
+        glow.addColorStop(0, `rgba(${color.accent}, ${(light ? 0.1 : 0.14) * spot.a})`);
+        glow.addColorStop(1, `rgba(${color.accent}, 0)`);
+        ctx.fillStyle = glow;
+        ctx.fillRect(spot.x - 280, spot.y - 280, 560, 560);
+      }
       // Past the corridor the field sits behind body text, so it fades back to a quiet 30%.
       const workEnd = work ? work.getBoundingClientRect().bottom : Infinity;
       const quiet = workEnd < h ? Math.max(0.15, workEnd / h) : 1;
@@ -144,8 +169,9 @@ export default function DepthField() {
         const py = cy + ((s.y - pointer.y * 0.12) / s.z) * f;
         if (px < -20 || px > w + 20 || py < -20 || py > h + 20) continue;
         const near = 1 - s.z;
-        const alpha = Math.min(1, near * 1.1) * Math.min(1, (1 - s.z) * 6) * (s.hot ? 0.9 : 0.55) * quiet * (light ? 0.5 : 1);
-        const size = near * 2 + 0.4;
+        const lit = spot.a > 0.02 ? Math.max(0, 1 - Math.hypot(px - spot.x, py - spot.y) / 240) * spot.a : 0;
+        const alpha = Math.min(1, near * 1.1) * Math.min(1, (1 - s.z) * 6) * (s.hot ? 0.9 : 0.55) * quiet * (light ? 0.5 : 1) * (1 + lit * 2.2);
+        const size = near * 2 + 0.4 + lit * 2;
         const c = s.hot ? color.accent : color.paper;
         const trail = !light && quiet > 0.5 && Math.abs(dz) > 0.004 ? dz * 3 : 0;
         if (trail) {
@@ -171,6 +197,7 @@ export default function DepthField() {
       themeWatch.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
+      document.documentElement.removeEventListener("pointerleave", onLeave);
     };
   }, []);
 

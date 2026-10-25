@@ -50,7 +50,7 @@ export default function StackWall() {
   const edge = "[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]";
 
   return (
-    <section ref={ref} data-act="stack" aria-labelledby="stack-heading" className="relative py-24 md:py-32">
+    <section ref={ref} id="stack" data-act="stack" aria-labelledby="stack-heading" className="relative py-24 md:py-32">
       <WarpFlash />
       <div className="relative px-6 md:px-14">
         <Scrim className="-inset-x-10 -inset-y-12" />
