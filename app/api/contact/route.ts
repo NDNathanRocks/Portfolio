@@ -37,12 +37,10 @@ const oneLine = (s: string) => s.replace(/[\u0000-\u001f\u007f]+/g, " ").trim();
 export async function POST(req: Request) {
   const origin = req.headers.get("origin");
   const host = req.headers.get("host");
-  if (origin && host) {
-    try {
-      if (new URL(origin).host !== host) return NextResponse.json({ error: "Forbidden." }, { status: 403 });
-    } catch {
-      return NextResponse.json({ error: "Forbidden." }, { status: 403 });
-    }
+  try {
+    if (!origin || !host || new URL(origin).host !== host) return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  } catch {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
   }
 
   const raw = await req.text();
