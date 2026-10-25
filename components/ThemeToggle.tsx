@@ -6,7 +6,7 @@ import { useReducedMotion } from "framer-motion";
 
 type Theme = "dark" | "light";
 
-// Light/dark switch. Follows the OS by default (see the inline script in layout), remembers a manual choice,
+// Light/dark switch. New visitors start in dark (see the inline script in layout); a manual choice is saved per browser,
 // and reveals the new theme as a circle expanding from the button where View Transitions are supported.
 export default function ThemeToggle({ className = "" }: { className?: string }) {
   const [theme, setTheme] = useState<Theme | null>(null);

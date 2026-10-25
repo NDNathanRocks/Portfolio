@@ -56,8 +56,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Runs before first paint: stored choice wins, otherwise follow the OS.
-const themeScript = `try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="dark"}`;
+// Runs before first paint: a visitor's saved choice wins, otherwise everyone starts in dark mode (the OS setting is ignored).
+const themeScript = `try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark")t="dark";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="dark"}`;
 
 const fontVars = [archivo, bricolage, dmMono, deva, arab, guru, guj, beng, tamil, thai]
   .map((f) => f.variable)
