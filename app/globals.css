@@ -6,6 +6,8 @@
   --color-accent: var(--accent);
   --color-s1: var(--s1);
   --color-s2: var(--s2);
+  --color-soft: var(--soft);
+  --color-mute: var(--mute);
   --font-hero: var(--font-archivo), sans-serif;
   --font-display: var(--font-bricolage), sans-serif;
   --font-mono: var(--font-dm-mono), monospace;
@@ -17,8 +19,13 @@
   --accent: #d6ff3f;
   --s1: #111111;
   --s2: #0d0d0d;
+  --soft: #aeaaa4;
+  --mute: #96938e;
   --edge: 255 255 255;
   --edge-hi: 0.07;
+  --sky-a: transparent;
+  --sky-b: transparent;
+  --sun: transparent;
   color-scheme: dark;
 }
 
@@ -29,8 +36,13 @@
   --accent: #4d6e00;
   --s1: #ebe5d7;
   --s2: #efe9dc;
+  --soft: #4a463f;
+  --mute: #5c5850;
   --edge: 0 0 0;
   --edge-hi: 0.8;
+  --sky-a: #d3e6f1;
+  --sky-b: #f7dcc2;
+  --sun: rgb(255 226 150 / 0.9);
   color-scheme: light;
 }
 
@@ -68,6 +80,27 @@ body {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Daylight (light theme only): see components/story/Sky.tsx. */
+.sky {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+:root[data-theme="light"] .sky {
+  opacity: 1;
+}
+.cloud {
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0));
+  animation: drift linear infinite;
+}
+@keyframes drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(160vw); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cloud { animation: none; }
 }
 
 /* Physical dark surface: hairline border + specular top edge. */

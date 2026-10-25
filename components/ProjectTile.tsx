@@ -85,7 +85,7 @@ export default function ProjectTile({ project, index }: { project: Project; inde
           <div>
             <h3 className={`font-display font-medium leading-[0.92] tracking-[-0.03em] ${titleClass}`}>{title}</h3>
             <p className="mt-3 max-w-[40ch] text-base opacity-80 md:text-lg">{subtitle}</p>
-            <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-[0.14em] opacity-70">
+            <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-[0.14em] opacity-80">
               {stack.map((s) => (
                 <li key={s}>{s}</li>
               ))}

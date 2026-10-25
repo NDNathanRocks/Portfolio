@@ -35,7 +35,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   return (
     <article className="px-6 pb-24 pt-12 md:px-14 md:pt-14">
-      <Link href="/#work" className={`-my-3 inline-flex min-h-11 items-center text-paper/60 transition-colors hover:text-accent ${mono}`}>
+      <Link href="/#work" className={`-my-3 inline-flex min-h-11 items-center text-mute transition-colors hover:text-accent ${mono}`}>
         &larr; All work
       </Link>
 
@@ -46,7 +46,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           style={{ background: `linear-gradient(90deg, ${project.from}, ${project.to})` }}
         />
         <Enter>
-          <p className={`text-paper/60 ${mono}`}>{project.meta}</p>
+          <p className={`text-mute ${mono}`}>{project.meta}</p>
         </Enter>
         <Enter step={1}>
           <h1 className="mt-5 font-display text-[clamp(3rem,10vw,9rem)] font-light leading-[0.9] tracking-[-0.04em]">
@@ -54,8 +54,8 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           </h1>
         </Enter>
         <Enter step={2}>
-          <p className="mt-6 max-w-[36ch] text-xl text-paper/80 md:text-2xl">{project.subtitle}</p>
-          <ul className={`mt-6 flex flex-wrap gap-x-5 gap-y-2 text-paper/60 ${mono}`}>
+          <p className="mt-6 max-w-[36ch] text-xl text-soft md:text-2xl">{project.subtitle}</p>
+          <ul className={`mt-6 flex flex-wrap gap-x-5 gap-y-2 text-mute ${mono}`}>
             {project.stack.map((s) => (
               <li key={s}>{s}</li>
             ))}
@@ -63,7 +63,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         </Enter>
         {project.description && (
           <Enter step={3}>
-            <p className="mt-8 max-w-[70ch] text-lg text-paper/80">{project.description}</p>
+            <p className="mt-8 max-w-[70ch] text-lg text-soft">{project.description}</p>
           </Enter>
         )}
         {(project.liveUrl || project.repo) && (
@@ -110,13 +110,13 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
       <nav aria-label="More projects" className="mt-20 grid grid-cols-2 gap-6 border-t border-paper/15 pt-8">
         <Link href={`/projects/${prev.id}`} className="group">
-          <span className={`block text-paper/60 ${mono}`}>&larr; Previous</span>
+          <span className={`block text-mute ${mono}`}>&larr; Previous</span>
           <span className="mt-2 block font-display text-2xl font-light transition-colors group-hover:text-accent md:text-4xl">
             {prev.title}
           </span>
         </Link>
         <Link href={`/projects/${next.id}`} className="group text-right">
-          <span className={`block text-paper/60 ${mono}`}>Next &rarr;</span>
+          <span className={`block text-mute ${mono}`}>Next &rarr;</span>
           <span className="mt-2 block font-display text-2xl font-light transition-colors group-hover:text-accent md:text-4xl">
             {next.title}
           </span>

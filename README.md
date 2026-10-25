@@ -6,6 +6,7 @@ Live Deployment: [Your Vercel Link Here]
 
 ## 🚀 Key Features
 
+* **Scroll-Driven 3D Story ("The Descent"):** The home page plays as one camera move in six acts. A pinned hero dives through the cube, projects fly past in a perspective corridor, experience cards rise out of depth, the stack runs across a tilted plane, and the contact block opens like an aperture as the cube reassembles. A canvas starfield streaks with scroll velocity behind it all, and the side rail shows the current act. Phones and `prefers-reduced-motion` get the static layout. Code lives in `components/story/`, tuning in `lib/story.ts`.
 * **Interactive 3D Hero:** A drag-to-rotate CSS 3D cube with release inertia, cursor-tracking lean, and click-to-burst interactions built completely without heavy WebGL libraries.
 * **Dynamic Typography:** Variable-font hover engine (Archivo) that fluidly scales weight and width on interaction using Framer Motion springs.
 * **Smooth Inertial Scrolling:** Powered by Lenis. Includes staggered scroll-reveals, parallaxing project art, and velocity-reactive marquee text.

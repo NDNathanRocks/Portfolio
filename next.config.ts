@@ -19,6 +19,24 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=()" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+          // Report-only until it has been watched in the console: the WASM demos and the inline theme script are the risk.
+          {
+            key: "Content-Security-Policy-Report-Only",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob:",
+              "font-src 'self' data:",
+              "connect-src 'self' https://aegis-ai-race-api.onrender.com https://aegis-ai-race.vercel.app",
+              "worker-src 'self' blob:",
+              "frame-src 'self' https://aegis-ai-race.vercel.app",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join("; "),
+          },
         ],
       },
       // Nothing may frame the site, except our own pages framing the self-hosted Clarity demo.

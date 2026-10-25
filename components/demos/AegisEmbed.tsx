@@ -28,6 +28,7 @@ export default function AegisEmbed({ src, origin, note }: { src: string; origin:
       <iframe
         ref={frame}
         src={src}
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
         title="Naive vs Engineered AI Architecture Race"
         loading="lazy"
         allow="clipboard-write"
