@@ -42,8 +42,11 @@ export default function DepthField() {
     }));
 
     const color = { paper: "244, 239, 230", accent: "214, 255, 63" };
+    // Light mode: dark streaks on cream read as scratches through the text, so it gets soft dust instead of streaks.
+    let light = false;
     const readColors = () => {
       const s = getComputedStyle(document.documentElement);
+      light = document.documentElement.dataset.theme === "light";
       color.paper = rgb(s.getPropertyValue("--paper").trim(), color.paper);
       color.accent = rgb(s.getPropertyValue("--accent").trim(), color.accent);
     };
@@ -102,7 +105,7 @@ export default function DepthField() {
       ctx.clearRect(0, 0, w, h);
       // Past the corridor the field sits behind body text, so it fades back to a quiet 30%.
       const workEnd = work ? work.getBoundingClientRect().bottom : Infinity;
-      const quiet = workEnd < h ? Math.max(0.3, workEnd / h) : 1;
+      const quiet = workEnd < h ? Math.max(0.15, workEnd / h) : 1;
 
       // Hero floor: a grid receding to a horizon, fading out over the first screen of scroll.
       const floor = Math.max(0, 1 - y / (h * 0.9)) * (small ? 0.16 : 0.22);
@@ -141,10 +144,10 @@ export default function DepthField() {
         const py = cy + ((s.y - pointer.y * 0.12) / s.z) * f;
         if (px < -20 || px > w + 20 || py < -20 || py > h + 20) continue;
         const near = 1 - s.z;
-        const alpha = Math.min(1, near * 1.1) * Math.min(1, (1 - s.z) * 6) * (s.hot ? 0.9 : 0.55) * quiet;
+        const alpha = Math.min(1, near * 1.1) * Math.min(1, (1 - s.z) * 6) * (s.hot ? 0.9 : 0.55) * quiet * (light ? 0.5 : 1);
         const size = near * 2 + 0.4;
         const c = s.hot ? color.accent : color.paper;
-        const trail = Math.abs(dz) > 0.004 ? dz * 3 : 0;
+        const trail = !light && quiet > 0.5 && Math.abs(dz) > 0.004 ? dz * 3 : 0;
         if (trail) {
           const tz = Math.max(0.02, s.z - trail);
           ctx.strokeStyle = `rgba(${c}, ${alpha})`;

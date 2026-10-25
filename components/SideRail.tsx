@@ -119,7 +119,7 @@ export default function SideRail() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -24 }}
                 transition={snap}
-                className={`absolute inset-0 flex items-center justify-center whitespace-nowrap text-paper/60 ${vertical}`}
+                className={`absolute inset-0 flex items-center justify-center whitespace-nowrap text-mute ${vertical}`}
               >
                 <span className="text-accent">{String(act + 1).padStart(2, "0")}</span>&nbsp;{acts[act].label}
               </motion.span>

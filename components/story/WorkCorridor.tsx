@@ -8,7 +8,9 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useMotionValueEvent, useTransform, type MotionValue, type Variants } from "framer-motion";
 import { projects, type Project } from "@/lib/content";
-import { corridorGap } from "@/lib/story";
+import ActKicker from "./ActKicker";
+import BridgeBand from "./BridgeBand";
+import { corridorGap, taglines } from "@/lib/story";
 
 const MotionLink = motion.create(Link);
 const mono = "font-mono text-xs uppercase tracking-[0.14em]";
@@ -42,7 +44,7 @@ function Card({ project, index, focus, onFocusCard }: {
 
   return (
     <motion.div
-      className="absolute left-1/2 top-1/2 h-[min(62vh,560px)] w-[min(44vw,620px)] -translate-x-1/2 -translate-y-1/2"
+      className="absolute left-1/2 top-[55%] h-[min(60vh,540px)] w-[min(44vw,620px)] -translate-x-1/2 -translate-y-1/2"
       style={{ x, z, rotateY, opacity, pointerEvents }}
     >
       <MotionLink
@@ -83,7 +85,7 @@ function Card({ project, index, focus, onFocusCard }: {
             </p>
             <h3 className="mt-2 font-display text-[clamp(2.25rem,3.6vw,3.75rem)] font-medium leading-[0.92] tracking-[-0.03em]">{title}</h3>
             <p className="mt-3 max-w-[40ch] text-base opacity-80 md:text-lg">{subtitle}</p>
-            <ul className={`mt-5 flex flex-wrap gap-x-4 gap-y-1 opacity-70 ${mono}`}>
+            <ul className={`mt-5 flex flex-wrap gap-x-4 gap-y-1 opacity-80 ${mono}`}>
               {stack.map((s) => (
                 <li key={s}>{s}</li>
               ))}
@@ -123,9 +125,9 @@ function Hud({ progress, focus }: { progress: MotionValue<number>; focus: Motion
     <div aria-hidden className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-end justify-between gap-6 px-14 pb-10 ${mono}`}>
       <div>
         <p className="text-accent">
-          {pad(active + 1)} <span className="text-paper/50">/ {pad(count)}</span>
+          {pad(active + 1)} <span className="text-mute">/ {pad(count)}</span>
         </p>
-        <p className="mt-2 text-paper/70">
+        <p className="mt-2 text-soft">
           <Decode key={project.id} text={project.title} />
         </p>
       </div>
@@ -164,6 +166,11 @@ function Corridor({ progress, onFocusCard }: { progress: MotionValue<number>; on
   return (
     <>
       <Floor progress={progress} />
+      <BridgeBand className="absolute inset-x-0 top-0 z-20" />
+      <div className="absolute left-14 top-[72px] z-20">
+        <ActKicker index={2} line={taglines.corridor} />
+        <h2 className="mt-3 font-display text-[clamp(2.25rem,4vw,3.5rem)] font-light leading-[0.9] tracking-[-0.035em]">Work</h2>
+      </div>
       <div className="absolute inset-0 [perspective:1200px] [perspective-origin:50%_45%]">
         <div className="absolute inset-0 [transform-style:preserve-3d]">
           {projects.map((project, i) => (

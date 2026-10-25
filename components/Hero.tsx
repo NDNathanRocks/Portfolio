@@ -12,7 +12,7 @@ import { profile } from "@/lib/content";
 import { resumePath } from "@/lib/site";
 import { pin } from "@/lib/story";
 
-const label = "font-mono text-xs uppercase tracking-[0.14em] text-paper/60";
+const label = "font-mono text-xs uppercase tracking-[0.14em] text-mute";
 
 function Drift({
   progress,
@@ -112,7 +112,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.12, ease: easeOut }}
-                className="mt-10 max-w-3xl font-hero text-xl text-paper/85 md:text-3xl"
+                className="mt-10 max-w-3xl font-hero text-xl text-soft md:text-3xl"
               >
                 <VariableText
                   text={profile.subtitle}

@@ -1,6 +1,10 @@
 "use client";
 
 import DepthPlace from "./story/DepthPlace";
+import ActKicker from "./story/ActKicker";
+import Scrim from "./story/Scrim";
+import WarpFlash from "./story/WarpFlash";
+import { taglines } from "@/lib/story";
 import { easeDrawer } from "@/lib/motion";
 import { spotlightMove } from "@/lib/spotlight";
 import BlurIn from "./BlurIn";
@@ -24,7 +28,7 @@ const flipProps = (i: number) => ({
   initial: "hidden",
   whileInView: "shown",
   viewport: { once: true, margin: "-60px" },
-  style: { transformPerspective: 800, transformOrigin: "50% 100%" },
+  style: { transformOrigin: "50% 100%" },
 });
 
 export default function Experience() {
@@ -38,15 +42,18 @@ export default function Experience() {
   });
 
   return (
-    <section id="experience" data-act="path" className="scroll-mt-4 py-24 md:py-32">
+    <section id="experience" data-act="path" className="relative scroll-mt-4 py-24 md:py-32">
+      <WarpFlash />
+      <Scrim className="inset-x-0 -inset-y-10" />
       <div className="px-6 md:px-14">
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 lg:grid-cols-12">
           <div className="self-start lg:sticky lg:top-24 lg:col-span-4">
+            <ActKicker index={3} line={taglines.path} className="mb-8" />
             <h2 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-light leading-[0.95] tracking-[-0.03em]">
               <Reveal>Where I&rsquo;ve</Reveal>
               <Reveal delay={0.08}>been</Reveal>
             </h2>
-            <p className={`mt-6 text-paper/60 ${mono}`}><BlurIn text="03 chapters" /></p>
+            <p className={`mt-6 text-mute ${mono}`}><BlurIn text="03 chapters" /></p>
           </div>
 
           <div className="lg:col-span-7 lg:col-start-6">
@@ -93,9 +100,9 @@ export default function Experience() {
                         <div className="flex flex-col justify-between gap-2 sm:flex-row sm:gap-6">
                           <div>
                             <p className="font-display text-2xl font-light leading-tight md:text-3xl">{row.role}</p>
-                            <p className={`mt-2 opacity-60 ${mono}`}>{row.org}</p>
+                            <p className={`mt-2 opacity-80 ${mono}`}>{row.org}</p>
                           </div>
-                          <span className={`whitespace-nowrap opacity-60 ${mono}`}>{row.dates}</span>
+                          <span className={`whitespace-nowrap opacity-80 ${mono}`}>{row.dates}</span>
                         </div>
                         {row.metrics.length > 0 && (
                           <dl className="mt-7 flex flex-wrap gap-x-10 gap-y-5">
@@ -104,7 +111,7 @@ export default function Experience() {
                                 <dt className="sr-only">{m.label}</dt>
                                 <dd className="font-display text-4xl font-medium leading-none tracking-[-0.03em] md:text-5xl">
                                   <CountUp value={m.value} prefix={m.prefix} suffix={m.suffix} />
-                                  <span aria-hidden className={`mt-2 block font-mono text-xs font-normal uppercase tracking-[0.14em] opacity-60`}>
+                                  <span aria-hidden className={`mt-2 block font-mono text-xs font-normal uppercase tracking-[0.14em] opacity-80`}>
                                     <BlurIn text={m.label} />
                                   </span>
                                 </dd>
@@ -124,23 +131,23 @@ export default function Experience() {
             <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-2">
               <div>
                 <h3 className={`mb-4 text-accent ${mono}`}>Awards</h3>
-                <ul className="space-y-5">
+                <ul className="space-y-5 [perspective:800px]">
                   {awards.map((a, i) => (
                     <motion.li key={a.title} {...flipProps(i)}>
                       <p className="font-display text-xl">{a.title}</p>
-                      <p className="text-paper/70">{a.detail}</p>
-                      <p className={`mt-1 text-paper/60 ${mono}`}>{a.date}</p>
+                      <p className="text-soft">{a.detail}</p>
+                      <p className={`mt-1 text-mute ${mono}`}>{a.date}</p>
                     </motion.li>
                   ))}
                 </ul>
               </div>
               <div>
                 <h3 className={`mb-4 text-accent ${mono}`}>Stack</h3>
-                <ul className="space-y-5">
+                <ul className="space-y-5 [perspective:800px]">
                   {skills.map((s, i) => (
                     <motion.li key={s.group} {...flipProps(i)}>
                       <p className="font-display text-xl">{s.group}</p>
-                      <p className="text-paper/70">{s.items}</p>
+                      <p className="text-soft">{s.items}</p>
                     </motion.li>
                   ))}
                 </ul>

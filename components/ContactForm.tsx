@@ -25,9 +25,9 @@ const fields: Variants = {
   fly: { opacity: 0, transition: { duration: 0.3 } },
 };
 
-const label = "mb-2 block font-mono text-xs uppercase tracking-[0.14em] text-paper/60";
+const label = "mb-2 block font-mono text-xs uppercase tracking-[0.14em] text-mute";
 const input =
-  "w-full border-0 border-b border-paper/30 bg-transparent py-3 text-lg text-paper outline-none transition-colors placeholder:text-paper/50 focus:border-accent";
+  "w-full border-0 border-b border-paper/30 bg-transparent py-3 text-lg text-paper outline-none transition-colors placeholder:text-mute focus:border-accent";
 
 export default function ContactForm() {
   const reduced = useReducedMotion();
@@ -87,7 +87,7 @@ export default function ContactForm() {
             <p className="font-display text-4xl font-light leading-tight tracking-[-0.02em] md:text-5xl">
               Message sent.
             </p>
-            <p className="max-w-[36ch] text-lg text-paper/70">
+            <p className="max-w-[36ch] text-lg text-soft">
               Thanks{values.name ? `, ${values.name.split(" ")[0]}` : ""}. I&rsquo;ll reply to {values.email}.
             </p>
             <button
@@ -124,7 +124,7 @@ export default function ContactForm() {
               <div>
                 <label htmlFor="cf-message" className={label}>Message</label>
                 <textarea id="cf-message" required minLength={10} maxLength={4000} rows={5} value={values.message} onChange={set("message")} className={`${input} resize-none`} placeholder="What would you like to talk about?" />
-                <p className="mt-2 text-right font-mono text-xs text-paper/60">{values.message.length}/4000</p>
+                <p className="mt-2 text-right font-mono text-xs text-mute">{values.message.length}/4000</p>
               </div>
 
               <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
