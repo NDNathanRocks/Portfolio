@@ -21,7 +21,7 @@ const Label = ({ x, y, children, anchor = "start", dim = false, ...rest }: { x: 
   </text>
 );
 
-function Aegis() {
+function DualSight() {
   const nodes = [
     [60, "RETRIEVE"],
     [140, "ROUTE"],
@@ -34,7 +34,7 @@ function Aegis() {
       <Label x={380} y={36} anchor="end" dim className="pv-pulse font-mono">thinking…</Label>
       <rect x={20} y={46} width={360} height={4} rx={2} fill="currentColor" stroke="none" opacity={0.15} />
       <rect x={20} y={46} width={360} height={4} rx={2} fill="currentColor" stroke="none" opacity={0.6} className="pv-ol pv-slowbar" />
-      <Label x={20} y={96} dim>AEGIS PIPELINE</Label>
+      <Label x={20} y={96} dim>DUALSIGHT PIPELINE</Label>
       <g className={HI}>
         <rect x={20} y={106} width={360} height={4} rx={2} fill="currentColor" stroke="none" opacity={0.15} />
         <rect x={20} y={106} width={360} height={4} rx={2} fill="currentColor" stroke="none" className="pv-ol pv-grow" style={at(0.2, 2.6)} />
@@ -175,7 +175,7 @@ function Rfp() {
 }
 
 const previews: Record<string, () => ReactNode> = {
-  "aegis-ai-race": Aegis,
+  dualsight: DualSight,
   clarity: Clarity,
   binit: BinIt,
   smile: Smile,

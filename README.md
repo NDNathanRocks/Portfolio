@@ -10,7 +10,7 @@ Live: [nathandsouza.dpdns.org](https://nathandsouza.dpdns.org)
 * **Auto-Play Tour:** "▶ Auto-play" in the hero (or a shared `/?tour` link) plays the whole story hands-free in about 50 seconds, slowing at each act. Any scroll, key, touch or click hands control straight back.
 * **Navigation That Remembers:** Opening a project and coming back (browser Back or "← All work") returns you to the exact spot you left, with the card you opened briefly ringed. "Back to the surface ↑" at the bottom climbs the story in reverse to the top.
 * **Animated Project Previews:** Each corridor card loops a small code-drawn animation of what the project does (SVG/CSS, no videos), running only on the card in focus.
-* **Client-Side AI Demos:** Project pages run live demos in the browser: smile detection and panorama stitching with OpenCV.js, waste classification with an ONNX model, and the Clarity task breakdown. Each demo loads only when launched. The flagship Aegis AI Race is embedded live.
+* **Client-Side AI Demos:** Project pages run live demos in the browser: smile detection and panorama stitching with OpenCV.js, waste classification with an ONNX model, and the Clarity task breakdown. Each demo loads only when launched. The flagship, DualSight, is embedded live.
 * **Interactive 3D Cube:** A drag-to-rotate CSS 3D cube with release inertia, cursor-tracking lean, and click-to-burst, without any WebGL library.
 * **Dynamic Typography:** A variable-font hover engine (Archivo) that fluidly scales weight and width using Framer Motion springs.
 * **Two Themes:** Dark (lime) by default, and a light sunset theme with an ember accent. The visitor's choice is remembered per browser.

@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
       fallback: [{ source: "/demos/clarity/:path*", destination: "/demos/clarity/index.html" }],
     };
   },
+  async redirects() {
+    // DualSight was called "Aegis AI Race"; keep old links and search results working.
+    return [{ source: "/projects/aegis-ai-race", destination: "/projects/dualsight", permanent: true }];
+  },
   async headers() {
     return [
       {
