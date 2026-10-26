@@ -1,14 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  motion,
-  motionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
+import { motion, motionValue, useSpring, useTransform, type MotionValue } from "framer-motion";
+import useReduced from "@/lib/useReduced";
 
 export type Axes = { wght: number; wdth: number };
 
@@ -53,7 +47,7 @@ export default function VariableText({
   className = "",
   falloff = [1, 0.55, 0.2],
 }: Props) {
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const levels = useMemo(
     () => Array.from({ length: text.length }, () => motionValue(0)),
     [text.length],

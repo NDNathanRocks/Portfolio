@@ -5,7 +5,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import type { Project } from "@/lib/content";
 import { demoRegistry } from "./registry";
-import AegisEmbed from "./AegisEmbed";
+import DualSightEmbed from "./DualSightEmbed";
 
 const mono = "font-mono text-xs uppercase tracking-[0.14em]";
 
@@ -95,6 +95,6 @@ function PlaceholderStage({ project }: { project: Project }) {
 }
 
 export default function DemoStage({ project }: { project: Project }) {
-  if (project.demo.kind === "embed") return <AegisEmbed src={project.demo.src} origin={project.demo.origin} note={project.demo.note} />;
+  if (project.demo.kind === "embed") return <DualSightEmbed src={project.demo.src} origin={project.demo.origin} note={project.demo.note} />;
   return project.demo.kind === "confidential" ? <ConfidentialStage /> : <PlaceholderStage project={project} />;
 }

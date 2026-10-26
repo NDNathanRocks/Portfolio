@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { easeOut } from "@/lib/motion";
+import useReduced from "@/lib/useReduced";
 
 // Choreographed entrance for project-page content: opacity + 12px rise, staggered by `step`.
 export default function Enter({
@@ -13,7 +14,7 @@ export default function Enter({
   children: React.ReactNode;
   className?: string;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   return (
     <motion.div
       className={className}

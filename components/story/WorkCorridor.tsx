@@ -10,6 +10,7 @@ import { motion, useMotionValueEvent, useTransform, type MotionValue, type Varia
 import { projects, type Project } from "@/lib/content";
 import ActKicker from "./ActKicker";
 import BridgeBand from "./BridgeBand";
+import CardPreview, { hasPreview } from "./CardPreview";
 import { corridorGap, taglines } from "@/lib/story";
 
 const MotionLink = motion.create(Link);
@@ -17,8 +18,12 @@ const mono = "font-mono text-xs uppercase tracking-[0.14em]";
 const count = projects.length;
 const pad = (n: number) => String(n).padStart(2, "0");
 
-// Which card the camera is at: -0.5 before the first, count - 0.6 as the last one passes.
-const focusAt = (p: number) => p * (count - 0.1) - 0.5;
+// Which card the camera is at: -0.5 before the first, count - 0.2 at the end, so the last card has flown fully past
+// (its opacity hits 0 at t = 0.7) before the stage unpins, instead of riding up the page half-visible.
+const span = count + 0.3;
+const focusAt = (p: number) => p * span - 0.5;
+// Scroll progress at which card i sits in focus; also handed to the auto-play tour so it slows on each card.
+const focusProgress = (i: number) => (i + 0.5) / span;
 
 function Card({ project, index, focus, onFocusCard }: {
   project: Project;
@@ -35,6 +40,9 @@ function Card({ project, index, focus, onFocusCard }: {
   const rotateY = useTransform(t, [-3, 0, 1], [side * -4, side * -8, side * -24]);
   const opacity = useTransform(t, [-3, -1.4, -0.2, 0.25, 0.7], [0, 0.45, 1, 1, 0]);
   const pointerEvents = useTransform(t, (v) => (Math.abs(v) < 0.45 ? "auto" : "none"));
+  const [live, setLive] = useState(false);
+  useMotionValueEvent(t, "change", (v) => setLive(Math.abs(v) < 0.45));
+  const preview = hasPreview(id);
 
   const wash: Variants = {
     rest: { clipPath: `circle(0% at ${origin})` },
@@ -73,16 +81,20 @@ function Card({ project, index, focus, onFocusCard }: {
           <div className={`flex items-start justify-between gap-4 ${mono}`}>
             <span className="flex items-center gap-2">
               {liveUrl && <span aria-hidden className="h-2 w-2 rounded-full bg-accent motion-safe:animate-pulse group-hover:bg-[#0a0a0a]" />}
+              {preview && <span aria-hidden className="opacity-50">{pad(index + 1)} /</span>}
               {meta}
             </span>
             <motion.span aria-hidden variants={arrow} transition={snap} className="text-lg leading-none">
               ↗
             </motion.span>
           </div>
+          {preview && <CardPreview id={id} live={live} />}
           <div>
-            <p aria-hidden className="font-display text-[clamp(4rem,7vw,7rem)] font-light leading-none tracking-[-0.05em] opacity-15">
-              {pad(index + 1)}
-            </p>
+            {!preview && (
+              <p aria-hidden className="font-display text-[clamp(4rem,7vw,7rem)] font-light leading-none tracking-[-0.05em] opacity-15">
+                {pad(index + 1)}
+              </p>
+            )}
             <h3 className="mt-2 font-display text-[clamp(2.25rem,3.6vw,3.75rem)] font-medium leading-[0.92] tracking-[-0.03em]">{title}</h3>
             <p className="mt-3 max-w-[40ch] text-base opacity-80 md:text-lg">{subtitle}</p>
             <ul className={`mt-5 flex flex-wrap gap-x-4 gap-y-1 opacity-80 ${mono}`}>
@@ -147,13 +159,13 @@ export default function WorkCorridor({ vh }: { vh: number }) {
     if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY;
     const travel = el.offsetHeight - window.innerHeight;
-    const p = (i + 0.5) / (count - 0.1);
+    const p = focusProgress(i);
     // Deferred a frame: the browser's own scroll-into-view for the focused element runs after the focus event.
     requestAnimationFrame(() => window.scrollTo({ top: top + p * travel, behavior: "instant" }));
   };
 
   return (
-    <div ref={sceneRef}>
+    <div ref={sceneRef} data-tour-beats={projects.map((_, i) => focusProgress(i).toFixed(3)).join(",")}>
       <StoryScene vh={vh}>
         {(progress) => <Corridor progress={progress} onFocusCard={focusCard} />}
       </StoryScene>

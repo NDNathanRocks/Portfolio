@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { DemoFrame, ErrorNote, Progress, btn, fetchWithProgress, mono } from "./ui";
+import useReduced from "@/lib/useReduced";
 
 // Port of BinIt's backend (app.py + obj_detect.py): classify with an ImageNet model, then take the first
 // of the top-10 predictions that is one of the nine items the app knows, and map it to a bin.
@@ -76,7 +77,7 @@ function softmax(v: Float32Array): Float32Array {
 }
 
 export default function BinItDemo() {
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const engine = useRef<Session | null>(null);
   const loading = useRef<Promise<Session> | null>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);

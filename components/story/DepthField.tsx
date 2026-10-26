@@ -42,7 +42,7 @@ export default function DepthField() {
     }));
 
     const color = { paper: "244, 239, 230", accent: "214, 255, 63" };
-    // Light mode: dark streaks on cream read as scratches through the text, so it gets soft dust instead of streaks.
+    // Light mode draws the same field in ink on cream, just a touch lighter so body text stays clear.
     let light = false;
     const readColors = () => {
       const s = getComputedStyle(document.documentElement);
@@ -123,7 +123,7 @@ export default function DepthField() {
       ctx.clearRect(0, 0, w, h);
       if (spot.a > 0.02) {
         const glow = ctx.createRadialGradient(spot.x, spot.y, 0, spot.x, spot.y, 280);
-        glow.addColorStop(0, `rgba(${color.accent}, ${(light ? 0.1 : 0.14) * spot.a})`);
+        glow.addColorStop(0, `rgba(${color.accent}, ${(light ? 0.06 : 0.09) * spot.a})`);
         glow.addColorStop(1, `rgba(${color.accent}, 0)`);
         ctx.fillStyle = glow;
         ctx.fillRect(spot.x - 280, spot.y - 280, 560, 560);
@@ -169,11 +169,11 @@ export default function DepthField() {
         const py = cy + ((s.y - pointer.y * 0.12) / s.z) * f;
         if (px < -20 || px > w + 20 || py < -20 || py > h + 20) continue;
         const near = 1 - s.z;
-        const lit = spot.a > 0.02 ? Math.max(0, 1 - Math.hypot(px - spot.x, py - spot.y) / 240) * spot.a : 0;
-        const alpha = Math.min(1, near * 1.1) * Math.min(1, (1 - s.z) * 6) * (s.hot ? 0.9 : 0.55) * quiet * (light ? 0.5 : 1) * (1 + lit * 2.2);
-        const size = near * 2 + 0.4 + lit * 2;
+        const lit = spot.a > 0.02 ? Math.max(0, 1 - Math.hypot(px - spot.x, py - spot.y) / 200) * spot.a : 0;
+        const alpha = Math.min(1, near * 1.1) * Math.min(1, (1 - s.z) * 6) * (s.hot ? 0.9 : 0.55) * quiet * (light ? 1.25 : 1) * (1 + lit * 1.5);
+        const size = (near * 2 + 0.4) * (light ? 1.5 : 1) + lit * 1.2;
         const c = s.hot ? color.accent : color.paper;
-        const trail = !light && quiet > 0.5 && Math.abs(dz) > 0.004 ? dz * 3 : 0;
+        const trail = quiet > 0.5 && Math.abs(dz) > 0.004 ? dz * 3 : 0;
         if (trail) {
           const tz = Math.max(0.02, s.z - trail);
           ctx.strokeStyle = `rgba(${c}, ${alpha})`;

@@ -37,8 +37,8 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    id: "aegis-ai-race",
-    title: "Aegis AI Race",
+    id: "dualsight",
+    title: "DualSight",
     subtitle: "Production AI Platform vs. Naive Wrapper",
     meta: "Flagship · Live",
     description:

@@ -5,9 +5,12 @@ import { useEffect, useRef, useState } from "react";
 const MIN_HEIGHT = 900;
 const MAX_HEIGHT = 20000;
 
-// Embeds the live Aegis race arena. The app reports its content height with
-// postMessage({ type: "aegis:resize", height }) so the frame never needs an inner scrollbar.
-export default function AegisEmbed({ src, origin, note }: { src: string; origin: string; note: string }) {
+// Embeds the live DualSight race arena. The app reports its content height with
+// postMessage({ type: "dualsight:resize", height }) so the frame never needs an inner scrollbar.
+// "aegis:resize" is the name from before the rename; still accepted so either version of the app works.
+const RESIZE = new Set<unknown>(["dualsight:resize", "aegis:resize"]);
+
+export default function DualSightEmbed({ src, origin, note }: { src: string; origin: string; note: string }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [height, setHeight] = useState(MIN_HEIGHT);
 
@@ -16,7 +19,7 @@ export default function AegisEmbed({ src, origin, note }: { src: string; origin:
       if (event.origin !== origin) return;
       if (event.source !== frame.current?.contentWindow) return;
       const data = event.data as { type?: unknown; height?: unknown } | null;
-      if (data?.type !== "aegis:resize" || typeof data.height !== "number" || !Number.isFinite(data.height)) return;
+      if (!data || !RESIZE.has(data.type) || typeof data.height !== "number" || !Number.isFinite(data.height)) return;
       setHeight(Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, Math.ceil(data.height))));
     };
     window.addEventListener("message", onMessage);

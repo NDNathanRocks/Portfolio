@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { snap } from "@/lib/motion";
+import useReduced from "@/lib/useReduced";
 
 // Pulls its child toward the cursor by at most `max` px. Fine-pointer hover devices only.
 export default function Magnetic({
@@ -15,7 +16,7 @@ export default function Magnetic({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const x = useSpring(mx, snap);

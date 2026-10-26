@@ -1,5 +1,6 @@
 import Enter from "@/components/Enter";
 import Magnetic from "@/components/Magnetic";
+import ReturnLink from "@/components/ReturnLink";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -35,9 +36,9 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   return (
     <article className="px-6 pb-24 pt-12 md:px-14 md:pt-14">
-      <Link href="/#work" className={`-my-3 inline-flex min-h-11 items-center text-mute transition-colors hover:text-accent ${mono}`}>
+      <ReturnLink className={`-my-3 inline-flex min-h-11 items-center text-mute transition-colors hover:text-accent ${mono}`}>
         &larr; All work
-      </Link>
+      </ReturnLink>
 
       <header className="mb-16 mt-12 md:mb-20">
         <div

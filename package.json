@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "resume": "node scripts/update-resume.mjs"
   },
   "dependencies": {
     "framer-motion": "^14.1.0",

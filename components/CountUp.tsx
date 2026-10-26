@@ -2,7 +2,8 @@
 
 import { easeOut } from "@/lib/motion";
 import { useEffect, useLayoutEffect, useRef } from "react";
-import { animate, useInView, useReducedMotion } from "framer-motion";
+import { animate, useInView } from "framer-motion";
+import useReduced from "@/lib/useReduced";
 
 export default function CountUp({
   value,
@@ -17,7 +18,7 @@ export default function CountUp({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
 
   useLayoutEffect(() => {
     if (ref.current) ref.current.textContent = `${prefix}${reduced ? value : 0}${suffix}`;

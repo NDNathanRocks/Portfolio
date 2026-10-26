@@ -3,10 +3,12 @@
 import { easeDrawer, snap } from "@/lib/motion";
 import { spotlightMove } from "@/lib/spotlight";
 import Decode from "./Decode";
+import CardPreview, { hasPreview } from "./story/CardPreview";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
+import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import type { Project } from "@/lib/content";
+import useReduced from "@/lib/useReduced";
 
 const MotionLink = motion.create(Link);
 
@@ -21,7 +23,7 @@ const FLY = [
 export default function ProjectTile({ project, index }: { project: Project; index: number }) {
   const { id, title, subtitle, meta, stack, from, to, origin, layout, titleClass } = project;
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const [calm, setCalm] = useState(false);
   const [amp, setAmp] = useState(1);
   useEffect(() => {
@@ -57,6 +59,7 @@ export default function ProjectTile({ project, index }: { project: Project; inde
         whileHover="hover"
         whileFocus="hover"
         aria-label={`${title}: ${subtitle}. Open project page`}
+        data-tour-beat="0.5"
         onPointerMove={spotlightMove}
         className="group surface spotlight relative block h-full min-h-[300px] overflow-hidden rounded-sm bg-s1 md:min-h-0"
       >
@@ -82,6 +85,12 @@ export default function ProjectTile({ project, index }: { project: Project; inde
               ↗
             </motion.span>
           </div>
+          {/* Phones get the corridor card's drawing as a still; the desktop bento rows are too short for it. */}
+          {hasPreview(id) && (
+            <div className="my-5 md:hidden">
+              <CardPreview id={id} live={false} />
+            </div>
+          )}
           <div>
             <h3 className={`font-display font-medium leading-[0.92] tracking-[-0.03em] ${titleClass}`}>{title}</h3>
             <p className="mt-3 max-w-[40ch] text-base opacity-80 md:text-lg">{subtitle}</p>

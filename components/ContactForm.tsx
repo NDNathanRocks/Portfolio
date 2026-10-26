@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
+import useReduced from "@/lib/useReduced";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -30,7 +31,7 @@ const input =
   "w-full border-0 border-b border-paper/30 bg-transparent py-3 text-lg text-paper outline-none transition-colors placeholder:text-mute focus:border-accent";
 
 export default function ContactForm() {
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const startedAt = useRef(Date.now());
   const [status, setStatus] = useState<Status>("idle");
   const [landed, setLanded] = useState(false);

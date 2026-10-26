@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Reveal from "../Reveal";
 import VelocityMarquee from "../VelocityMarquee";
 import ActKicker from "./ActKicker";
@@ -9,6 +9,7 @@ import Scrim from "./Scrim";
 import WarpFlash from "./WarpFlash";
 import { projects, skills } from "@/lib/content";
 import { captions, taglines } from "@/lib/story";
+import useReduced from "@/lib/useReduced";
 
 const mono = "font-mono text-xs uppercase tracking-[0.14em]";
 
@@ -41,7 +42,7 @@ function Chip({ label }: { label: string }) {
 // where you are looking.
 export default function StackWall() {
   const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const k = reduced ? 0 : 1;
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const rotateX = useTransform(scrollYProgress, [0, 0.45, 1], [26 * k, 3 * k, 3 * k]);

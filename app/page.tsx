@@ -2,10 +2,11 @@ import Hero from "@/components/Hero";
 import WorkGrid from "@/components/WorkGrid";
 import Experience from "@/components/Experience";
 import Contact from "@/components/Contact";
+import Sky from "@/components/story/Sky";
 import DepthField from "@/components/story/DepthField";
 import Fog from "@/components/story/Fog";
-import Sky from "@/components/story/Sky";
 import StackWall from "@/components/story/StackWall";
+import TourStatus from "@/components/Tour";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
         <StackWall />
         <Contact />
       </div>
+      <TourStatus />
     </>
   );
 }

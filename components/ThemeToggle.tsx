@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { flushSync } from "react-dom";
-import { useReducedMotion } from "framer-motion";
+import useReduced from "@/lib/useReduced";
 
 type Theme = "dark" | "light";
 
@@ -10,7 +10,7 @@ type Theme = "dark" | "light";
 // and reveals the new theme as a circle expanding from the button where View Transitions are supported.
 export default function ThemeToggle({ className = "" }: { className?: string }) {
   const [theme, setTheme] = useState<Theme | null>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
 
   useEffect(() => {
     setTheme(document.documentElement.dataset.theme === "light" ? "light" : "dark");

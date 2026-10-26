@@ -6,11 +6,11 @@ import {
   useAnimationFrame,
   useInView,
   useMotionValue,
-  useReducedMotion,
   useSpring,
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import useReduced from "@/lib/useReduced";
 
 const FACES = ["", "rotateY(90deg)", "rotateY(180deg)", "rotateY(-90deg)", "rotateX(90deg)", "rotateX(-90deg)"];
 
@@ -69,7 +69,7 @@ export default function OrbitObject({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
 
   const innerX = useMotionValue(0);
   const innerY = useMotionValue(0);

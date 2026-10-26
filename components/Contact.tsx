@@ -3,6 +3,7 @@ import HelloRotator from "./HelloRotator";
 import Landing, { LandingCube } from "./story/Landing";
 import ActKicker from "./story/ActKicker";
 import WarpFlash from "./story/WarpFlash";
+import Ascent from "./story/Ascent";
 import { taglines } from "@/lib/story";
 import { profile } from "@/lib/content";
 import { resumePath } from "@/lib/site";
@@ -51,7 +52,10 @@ export default function Contact() {
       </div>
 
       <div className="mt-20 flex items-end justify-between gap-6">
-        <p className={mono}>&copy; 2026 {profile.fullName}</p>
+        <div className={`flex flex-wrap items-center gap-x-8 gap-y-3 ${mono}`}>
+          <p>&copy; 2026 {profile.fullName}</p>
+          <Ascent className={`-my-3 inline-flex min-h-11 items-center ${link}`} />
+        </div>
         <LandingCube />
       </div>
     </Landing>

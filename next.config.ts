@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
       fallback: [{ source: "/demos/clarity/:path*", destination: "/demos/clarity/index.html" }],
     };
   },
+  async redirects() {
+    // DualSight was called "Aegis AI Race"; keep old links and search results working.
+    return [{ source: "/projects/aegis-ai-race", destination: "/projects/dualsight", permanent: true }];
+  },
   async headers() {
     return [
       {
@@ -59,7 +63,11 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/Nathan_DSouza_Resume.pdf",
-        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+        // Same URL for every version (see `npm run resume`), so browsers must re-check it rather than keep an old copy.
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex" },
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+        ],
       },
     ];
   },
