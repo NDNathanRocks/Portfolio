@@ -1,11 +1,12 @@
 "use client";
 
-import { motion, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
+import { motion, useTransform, type MotionValue } from "framer-motion";
+import useReduced from "@/lib/useReduced";
 
 // The Experience timeline as a road seen from above, receding downwards to a vanishing point (the origin of the route).
 // `progress` fills the centre line as you travel; `scroll` makes the dashes stream past. Desktop only: phones keep the thin line.
 export default function Road({ progress, scroll }: { progress: MotionValue<number>; scroll: MotionValue<number> }) {
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const dashOffset = useTransform(scroll, [0, 1], [0, reduced ? 0 : 320]);
   return (
     <div aria-hidden className="absolute bottom-0 left-[-34px] top-0 hidden w-[68px] md:block">

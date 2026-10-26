@@ -2,15 +2,16 @@
 
 import { easeOut } from "@/lib/motion";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import { greetings } from "@/lib/greetings";
+import useReduced from "@/lib/useReduced";
 
 const ease = easeOut;
 
 export default function HelloRotator() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.6 });
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const [seen, setSeen] = useState(false);
   const [index, setIndex] = useState(0);
   const running = seen && inView && !reduced;

@@ -59,7 +59,11 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/Nathan_DSouza_Resume.pdf",
-        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+        // Same URL for every version (see `npm run resume`), so browsers must re-check it rather than keep an old copy.
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex" },
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+        ],
       },
     ];
   },

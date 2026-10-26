@@ -1,11 +1,12 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { easeOut } from "@/lib/motion";
+import useReduced from "@/lib/useReduced";
 
 // Staggered blur-to-focus reveal, one word at a time, on viewport entry.
 export default function BlurIn({ text, className = "" }: { text: string; className?: string }) {
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   if (reduced) return <span className={className}>{text}</span>;
   return (
     <span className={className}>

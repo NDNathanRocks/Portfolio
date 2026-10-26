@@ -6,8 +6,9 @@ import Decode from "./Decode";
 import CardPreview, { hasPreview } from "./story/CardPreview";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
+import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import type { Project } from "@/lib/content";
+import useReduced from "@/lib/useReduced";
 
 const MotionLink = motion.create(Link);
 
@@ -22,7 +23,7 @@ const FLY = [
 export default function ProjectTile({ project, index }: { project: Project; index: number }) {
   const { id, title, subtitle, meta, stack, from, to, origin, layout, titleClass } = project;
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const [calm, setCalm] = useState(false);
   const [amp, setAmp] = useState(1);
   useEffect(() => {

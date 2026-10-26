@@ -3,14 +3,16 @@
 import Magnetic from "./Magnetic";
 import { easeOut } from "@/lib/motion";
 import { useRef } from "react";
-import { motion, transform, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, transform, useScroll, useTransform, type MotionValue } from "framer-motion";
 import VariableText from "./VariableText";
 import OrbitObject from "./OrbitObject";
 import HeroDive from "./story/HeroDive";
 import useCinematic from "./story/useCinematic";
 import { profile } from "@/lib/content";
 import { resumePath } from "@/lib/site";
+import { TourButton } from "./Tour";
 import { pin } from "@/lib/story";
+import useReduced from "@/lib/useReduced";
 
 const label = "font-mono text-xs uppercase tracking-[0.14em] text-mute";
 
@@ -44,7 +46,7 @@ export default function Hero() {
   const { scrollYProgress: dive } = useScroll({ target: ref, offset: ["start start", "end end"] });
   // The intro drift plays over the first 45% of the pin on desktop, and over the hero's own scroll-out elsewhere.
   const early = useTransform([drift, dive], ([d, p]) => (live.current ? Math.min(1, (p as number) / 0.45) : (d as number)));
-  const still = useReducedMotion() ? 0 : 1;
+  const still = useReduced() ? 0 : 1;
   // Desktop-only mappings read the live flag on every frame. A fixed output range would be baked in at mount
   // (framer hands scroll-linked opacity to the compositor), before we know which mode we're in.
   const gated = <T,>(input: number[], output: T[]) => {
@@ -90,10 +92,12 @@ export default function Hero() {
 
         <motion.div className="relative z-10 origin-left py-12" style={{ opacity: nameOpacity, scale: nameScale }}>
           <motion.h1
+            id="hero-title"
+            tabIndex={-1}
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: easeOut }}
-            className="font-hero uppercase leading-[0.86] tracking-[-0.04em] text-[clamp(3.75rem,11.5vw,10.75rem)]"
+            className="font-hero uppercase leading-[0.86] outline-none tracking-[-0.04em] text-[clamp(3.75rem,11.5vw,10.75rem)]"
           >
             <span className="sr-only">{profile.fullName}</span>
             {profile.nameLines.map((line, i) => (
@@ -144,9 +148,12 @@ export default function Hero() {
 
         <motion.div style={{ opacity: footerOpacity }} className={`relative z-10 flex flex-wrap justify-between gap-4 ${label}`}>
           <span>{profile.education}</span>
-          <span className="flex items-center gap-2">
-            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent motion-safe:animate-pulse" />
-            Scroll to enter &darr;
+          <span className="flex items-center gap-5">
+            <TourButton className="-my-3" />
+            <span className="flex items-center gap-2">
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent motion-safe:animate-pulse" />
+              Scroll to enter &darr;
+            </span>
           </span>
         </motion.div>
 

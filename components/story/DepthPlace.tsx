@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import useReduced from "@/lib/useReduced";
 
 // Scroll-scrubbed arrival from depth: the child rises out of the distance tilted back and faint, settles as it lands,
 // then eases back a touch once it has scrolled past the upper third of the screen.
@@ -16,7 +17,7 @@ export default function DepthPlace({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const k = useReducedMotion() ? 0 : 1;
+  const k = useReduced() ? 0 : 1;
   const { scrollYProgress: enter } = useScroll({ target: ref, offset: ["start end", "start 60%"] });
   const { scrollYProgress: leave } = useScroll({ target: ref, offset: ["end 45%", "end start"] });
   const transform = useTransform([enter, leave], ([e, l]) => {

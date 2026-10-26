@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import useReduced from "@/lib/useReduced";
 
 // Scroll-scrubbed entrance: the child glides into place as it rises through the viewport, and back out if you scroll up.
 export default function ScrollPlace({
@@ -18,7 +19,7 @@ export default function ScrollPlace({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const k = reduced ? 0 : 1;
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 65%"] });
   const tx = useTransform(scrollYProgress, [0, 1], [x * k, 0]);

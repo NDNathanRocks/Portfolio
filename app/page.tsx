@@ -6,6 +6,7 @@ import Sky from "@/components/story/Sky";
 import DepthField from "@/components/story/DepthField";
 import Fog from "@/components/story/Fog";
 import StackWall from "@/components/story/StackWall";
+import TourStatus from "@/components/Tour";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
         <StackWall />
         <Contact />
       </div>
+      <TourStatus />
     </>
   );
 }

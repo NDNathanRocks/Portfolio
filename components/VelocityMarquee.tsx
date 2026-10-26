@@ -6,12 +6,12 @@ import {
   useAnimationFrame,
   useInView,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
   useVelocity,
 } from "framer-motion";
+import useReduced from "@/lib/useReduced";
 
 const wrap = (min: number, max: number, v: number) => {
   const range = max - min;
@@ -29,7 +29,7 @@ export default function VelocityMarquee({
   className?: string;
   pauseOnHover?: boolean;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReduced();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
   const { scrollY } = useScroll();
