@@ -18,8 +18,12 @@ const mono = "font-mono text-xs uppercase tracking-[0.14em]";
 const count = projects.length;
 const pad = (n: number) => String(n).padStart(2, "0");
 
-// Which card the camera is at: -0.5 before the first, count - 0.6 as the last one passes.
-const focusAt = (p: number) => p * (count - 0.1) - 0.5;
+// Which card the camera is at: -0.5 before the first, count - 0.2 at the end, so the last card has flown fully past
+// (its opacity hits 0 at t = 0.7) before the stage unpins, instead of riding up the page half-visible.
+const span = count + 0.3;
+const focusAt = (p: number) => p * span - 0.5;
+// Scroll progress at which card i sits in focus; also handed to the auto-play tour so it slows on each card.
+const focusProgress = (i: number) => (i + 0.5) / span;
 
 function Card({ project, index, focus, onFocusCard }: {
   project: Project;
@@ -155,13 +159,13 @@ export default function WorkCorridor({ vh }: { vh: number }) {
     if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY;
     const travel = el.offsetHeight - window.innerHeight;
-    const p = (i + 0.5) / (count - 0.1);
+    const p = focusProgress(i);
     // Deferred a frame: the browser's own scroll-into-view for the focused element runs after the focus event.
     requestAnimationFrame(() => window.scrollTo({ top: top + p * travel, behavior: "instant" }));
   };
 
   return (
-    <div ref={sceneRef}>
+    <div ref={sceneRef} data-tour-beats={projects.map((_, i) => focusProgress(i).toFixed(3)).join(",")}>
       <StoryScene vh={vh}>
         {(progress) => <Corridor progress={progress} onFocusCard={focusCard} />}
       </StoryScene>

@@ -18,6 +18,8 @@ export default function Sky() {
         className="absolute inset-0"
         style={{ opacity: warm, background: "linear-gradient(180deg, var(--sky-b) 0%, transparent 70%)" }}
       />
+      {/* Low horizon glow, so the bottom of the screen stays sunset-warm instead of bare cream. */}
+      <div className="absolute inset-0" style={{ background: "linear-gradient(0deg, var(--sky-c) 0%, transparent 45%)" }} />
       <motion.div
         className="absolute right-[8%] top-[30%] h-[70vmin] w-[70vmin] rounded-full"
         style={{

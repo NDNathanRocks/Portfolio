@@ -23,6 +23,7 @@
   --mute: #96938e;
   --sky-a: transparent;
   --sky-b: transparent;
+  --sky-c: transparent;
   --sun: transparent;
   --edge: 255 255 255;
   --edge-hi: 0.07;
@@ -31,16 +32,18 @@
 
 /* Light theme swaps ink/paper so every existing bg-ink / text-paper utility flips with it. */
 :root[data-theme="light"] {
-  --ink: #f4efe6;
+  /* Sunset: a warm sand base (plain cream read as stark white), lighter card surfaces that lift off it, and an
+     ember accent that belongs to the sun (cobalt fought the peach sky). Ember is ~5.2:1 on the sand. */
+  --ink: #efe1cc;
   --paper: #15120e;
-  /* Cobalt: the complement of the peach sunset (olive lime turned muddy against it). ~6.6:1 on paper. */
-  --accent: #2c3fd1;
-  --s1: #ebe5d7;
-  --s2: #efe9dc;
+  --accent: #a33a0c;
+  --s1: #faf4ea;
+  --s2: #f7efe2;
   --soft: #4a463f;
   --mute: #5c5850;
   --sky-a: #cfd0ea;
   --sky-b: #f8b996;
+  --sky-c: rgb(240 150 110 / 0.3);
   --sun: rgb(255 140 70 / 0.85);
   --edge: 0 0 0;
   --edge-hi: 0.8;

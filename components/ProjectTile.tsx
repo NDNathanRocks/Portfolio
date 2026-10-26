@@ -59,6 +59,7 @@ export default function ProjectTile({ project, index }: { project: Project; inde
         whileHover="hover"
         whileFocus="hover"
         aria-label={`${title}: ${subtitle}. Open project page`}
+        data-tour-beat="0.5"
         onPointerMove={spotlightMove}
         className="group surface spotlight relative block h-full min-h-[300px] overflow-hidden rounded-sm bg-s1 md:min-h-0"
       >

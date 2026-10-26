@@ -18,7 +18,7 @@ export default function ActKicker({
   lineClass?: string;
 }) {
   return (
-    <div className={className}>
+    <div className={className} data-tour-beat="0.3">
       <p className={`font-mono text-xs uppercase tracking-[0.14em] ${kickerClass}`}>
         <Decode text={`Act ${pad(index + 1)} — ${acts[index].label}`} />
       </p>

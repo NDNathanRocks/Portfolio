@@ -34,7 +34,7 @@ export default function DepthPlace({
     k ? Math.min(1, (e as number) / 0.6) * (1 - 0.15 * (l as number)) : 1,
   );
   return (
-    <motion.div ref={ref} className={className} style={{ transform, opacity, transformOrigin: "50% 100%" }}>
+    <motion.div ref={ref} data-tour-beat="0.55" className={className} style={{ transform, opacity, transformOrigin: "50% 100%" }}>
       {children}
     </motion.div>
   );

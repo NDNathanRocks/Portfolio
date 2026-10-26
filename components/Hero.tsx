@@ -72,6 +72,7 @@ export default function Hero() {
       id="top"
       ref={ref}
       data-act="ignition"
+      data-tour-beats="0.5,0.86"
       className="relative md:motion-safe:h-[var(--hero-h)]"
       style={{ "--hero-h": `${pin.heroDesktop}vh` } as React.CSSProperties}
     >

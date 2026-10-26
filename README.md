@@ -13,7 +13,7 @@ Live: [nathandsouza.dpdns.org](https://nathandsouza.dpdns.org)
 * **Client-Side AI Demos:** Project pages run live demos in the browser: smile detection and panorama stitching with OpenCV.js, waste classification with an ONNX model, and the Clarity task breakdown. Each demo loads only when launched. The flagship Aegis AI Race is embedded live.
 * **Interactive 3D Cube:** A drag-to-rotate CSS 3D cube with release inertia, cursor-tracking lean, and click-to-burst, without any WebGL library.
 * **Dynamic Typography:** A variable-font hover engine (Archivo) that fluidly scales weight and width using Framer Motion springs.
-* **Two Themes:** Dark (lime) by default, and a light sunset theme with a cobalt accent. The visitor's choice is remembered per browser.
+* **Two Themes:** Dark (lime) by default, and a light sunset theme with an ember accent. The visitor's choice is remembered per browser.
 * **Multilingual Greeting:** Cycles through 26 languages, loading Noto font subsets (Devanagari, Tamil, Thai and more) only when needed.
 * **Serverless Contact API:** Zod-validated contact form on Resend, with a honeypot, rate limiting and an Origin check.
 * **Accessible by Default:** Reduced-motion parity, keyboard access to every card, WCAG-checked text contrast in both themes.

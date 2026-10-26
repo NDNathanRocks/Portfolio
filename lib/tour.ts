@@ -1,7 +1,7 @@
 import { getLenis } from "./scroll";
 
-// Auto-play: drifts down the whole page so the story plays itself, easing off at the start of each act so every
-// scene gets a beat. Any wheel, touch, key or click hands control straight back to the visitor.
+// Auto-play: drifts down the whole page so the story plays itself, coasting through the gaps and braking for each
+// heading and card. Any wheel, touch, key or click hands control straight back to the visitor.
 let running = false;
 let frame = 0;
 const listeners = new Set<() => void>();
@@ -17,6 +17,28 @@ export function subscribeTour(l: () => void) {
 
 const TAKEOVER = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
 const smooth = (t: number) => t * t * (3 - 2 * t);
+const FAST = 1.9;
+const SLOW = 0.45;
+
+// Scroll positions worth lingering on, marked in the markup:
+//   data-tour-beat="0.3"        slow down when this element's top is 30% of the way down the screen
+//   data-tour-beats="0.2,0.5"   on a pinned track: slow at these fractions of its pinned travel
+// Measured once when the tour starts (it starts from the hero, before any sticky stage has pinned).
+function findBeats(vh: number) {
+  const top = (el: Element) => el.getBoundingClientRect().top + window.scrollY;
+  const shown = (el: Element) => el.getClientRects().length > 0;
+  const beats: number[] = [];
+  document.querySelectorAll<HTMLElement>("[data-tour-beat]").forEach((el) => {
+    if (shown(el)) beats.push(top(el) - Number(el.dataset.tourBeat || 0.5) * vh);
+  });
+  document.querySelectorAll<HTMLElement>("[data-tour-beats]").forEach((el) => {
+    if (!shown(el)) return;
+    const travel = el.offsetHeight - vh;
+    if (travel <= 0) return;
+    el.dataset.tourBeats!.split(",").forEach((f) => beats.push(top(el) + Number(f) * travel));
+  });
+  return beats;
+}
 
 // The tour's own buttons toggle it themselves; treating their press as a takeover would stop then restart it.
 function takeover(e: Event) {
@@ -43,9 +65,7 @@ export function startTour() {
 
   const vh = window.innerHeight;
   const cruise = Math.max(140, vh * 0.2); // px per second: about 50 s top to bottom on a desktop
-  const acts = [...document.querySelectorAll<HTMLElement>("[data-act]")]
-    .filter((el) => el.offsetParent || el.getClientRects().length)
-    .map((el) => el.getBoundingClientRect().top + window.scrollY);
+  const beats = findBeats(vh);
   let pos = window.scrollY;
   let speed = 0;
   let last = performance.now();
@@ -54,13 +74,16 @@ export function startTour() {
     if (!running) return;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
-    // Half speed just after each act begins, blending back to cruise over half a screen.
-    let pace = 1;
-    for (const top of acts) {
-      const into = pos - top;
-      if (into >= -vh * 0.1 && into < vh * 0.5) pace = Math.min(pace, 0.5 + 0.5 * smooth(Math.max(0, into) / (vh * 0.5)));
+    // Coast faster through the gaps, then brake into each beat (a heading, a card in focus, the dive) and hold
+    // slowly for a moment just past it.
+    let near = 0;
+    for (const b of beats) {
+      const ahead = b - pos;
+      const k = ahead >= 0 ? ahead / (vh * 0.45) : -ahead / (vh * 0.2);
+      if (k < 1) near = Math.max(near, 1 - smooth(k));
     }
-    speed += (cruise * pace - speed) * Math.min(1, dt * 1.5);
+    const pace = FAST - (FAST - SLOW) * near;
+    speed += (cruise * pace - speed) * Math.min(1, dt * 2);
     const max = document.documentElement.scrollHeight - vh;
     pos = Math.min(max, pos + speed * dt);
     const lenis = getLenis();
