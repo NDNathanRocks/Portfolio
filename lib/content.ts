@@ -15,6 +15,12 @@ export type Demo =
   | { kind: "client"; note: string }
   | { kind: "iframe"; note: string; src?: string }
   | { kind: "embed"; note: string; src: string; origin: string }
+  | {
+      kind: "gallery";
+      note: string;
+      video?: { av1: string; mp4: string; poster: string; label: string; width: number; height: number };
+      images: { src: string; alt: string; width: number; height: number; wide?: boolean }[];
+    }
   | { kind: "confidential" };
 
 export type Project = {
@@ -33,6 +39,8 @@ export type Project = {
   titleClass: string;
   demo: Demo;
   impact?: Metric[];
+  stats?: Metric[];
+  highlights?: string[];
 };
 
 export const projects: Project[] = [
@@ -59,6 +67,51 @@ export const projects: Project[] = [
     },
   },
   {
+    id: "wavelit",
+    title: "Wavelit",
+    subtitle: "Live wallpaper app for Windows",
+    meta: "2026 - Present · Built for the Microsoft Store",
+    description:
+      "GPU shaders and music visualizers behind the Windows desktop icons, across every monitor.",
+    highlights: [
+      "Draws behind the desktop icons on Windows 10 and 11 (incl. 24H2), across mixed-scale monitors",
+      "Pauses when covered, adaptive quality guard when frames drop",
+      "Music visualizers: WASAPI capture, FFT into 64 bands, beat detection",
+      "Claude API shader Studio: each shader checked, compiled and GPU-benchmarked before use",
+    ],
+    stats: [
+      { value: 23, prefix: "~", suffix: "k", label: "lines of C#, JS, XAML" },
+      { value: 240, suffix: "+", label: "unit tests" },
+      { value: 19, label: "original GLSL shaders" },
+      { value: 0, prefix: "~", suffix: "%", label: "GPU when covered" },
+    ],
+    stack: ["C# / .NET 10", "WPF", "Win32 (P/Invoke)", "WebGL2 / GLSL", "WASAPI + FFT", "Claude API", "ONNX Runtime (DirectML)", "xUnit", "GitHub Actions + MSIX"],
+    repo: "https://github.com/NDNathanRocks/WaveLit",
+    from: "#2dd4bf",
+    to: "#e879f9",
+    origin: "0% 0%",
+    layout: "md:col-span-7 md:row-span-4",
+    titleClass: "text-[clamp(3rem,7vw,6.5rem)]",
+    demo: {
+      kind: "gallery",
+      note: "Recorded on my desktop: the overlays move with the music (sound off here). Screenshots below are from the repo.",
+      video: {
+        av1: "/projects/wavelit/wavelit-demo.av1.mp4",
+        mp4: "/projects/wavelit/wavelit-demo.mp4",
+        poster: "/projects/wavelit/wavelit-demo-poster.webp",
+        label: "Wavelit running behind the desktop icons: a moonlit lake, then a swirling nebula, with music-reactive constellation overlays",
+        width: 1920,
+        height: 1080,
+      },
+      images: [
+        { src: "/projects/wavelit/hero.webp", alt: "Wavelit: live wallpapers for Windows", width: 1600, height: 600, wide: true },
+        { src: "/projects/wavelit/neon-bars.webp", alt: "Neon Bars music visualizer", width: 960, height: 540 },
+        { src: "/projects/wavelit/stardust.webp", alt: "Resonant Stardust visualizer forming a Chladni pattern on a held note", width: 960, height: 540 },
+        { src: "/projects/wavelit/extend.webp", alt: "One wallpaper extended across a landscape and a portrait monitor, with a clock widget", width: 1216, height: 768, wide: true },
+      ],
+    },
+  },
+  {
     id: "clarity",
     title: "Clarity",
     subtitle: "AI time awareness assistant",
@@ -68,8 +121,8 @@ export const projects: Project[] = [
     from: "#a78bfa",
     to: "#f472b6",
     origin: "100% 0%",
-    layout: "md:col-span-7 md:row-span-4",
-    titleClass: "text-[clamp(3rem,7vw,6.5rem)]",
+    layout: "md:col-span-5 md:row-span-4",
+    titleClass: "text-[clamp(2.75rem,4.6vw,4.25rem)]",
     demo: { kind: "iframe", note: "The real app, exported for the web and running in a frame with sample data. Nothing is sent anywhere." },
   },
   {
@@ -82,7 +135,7 @@ export const projects: Project[] = [
     from: "#34d399",
     to: "#d9f99d",
     origin: "0% 0%",
-    layout: "md:col-span-5 md:row-span-2",
+    layout: "md:col-span-6 md:row-span-2",
     titleClass: "text-[clamp(2.5rem,4.2vw,3.75rem)]",
     demo: { kind: "client", note: "Classifies images in your browser with a lightweight model. Nothing is uploaded." },
   },
@@ -96,7 +149,7 @@ export const projects: Project[] = [
     from: "#fbbf24",
     to: "#fb923c",
     origin: "0% 100%",
-    layout: "md:col-span-5 md:row-span-2",
+    layout: "md:col-span-6 md:row-span-2",
     titleClass: "text-[clamp(2.25rem,3.6vw,3.25rem)]",
     demo: { kind: "client", note: "Runs in your browser with OpenCV.js, using the same Haar cascades as the Python script. Your webcam feed stays on your device." },
   },
@@ -183,6 +236,7 @@ export const skills = [
   { group: "Machine Learning & AI", items: "PyTorch, TensorFlow, Keras, OpenCV, Pytesseract, Claude API, Computer Vision" },
   { group: "Data & Databases", items: "SQL (SQLite), Power BI, ETL Pipelines, Chart.js, NumPy, Pandas" },
   { group: "Full-Stack", items: "Django, Flask, PySide6, React, React Native, TypeScript, Java, C/C++" },
+  { group: "Desktop & Graphics", items: "C# / .NET 10, WPF (MVVM), Win32 interop, WebGL2 / GLSL, Audio DSP (FFT), ONNX Runtime / DirectML, MSIX, GitHub Actions" },
 ];
 
 export const getProject = (slug: string) => projects.find((p) => p.id === slug);
