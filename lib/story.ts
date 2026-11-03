@@ -12,7 +12,7 @@ export type ActId = (typeof acts)[number]["id"];
 
 // One line per act, shown under its "Act 0N" kicker. The dive and the stack heading carry their own captions.
 export const taglines = {
-  corridor: "Six builds, one flight path.",
+  corridor: "Seven builds, one flight path.",
   path: "The route that got me here.",
   stack: "The toolkit.",
   landing: "Touchdown. Say hello.",

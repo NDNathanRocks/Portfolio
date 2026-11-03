@@ -1,6 +1,7 @@
 "use client";
 
 import Magnetic from "@/components/Magnetic";
+import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { Project } from "@/lib/content";
@@ -94,7 +95,35 @@ function PlaceholderStage({ project }: { project: Project }) {
   );
 }
 
+// Desktop apps can't run in a browser, so show real screenshots instead of a fake demo. Wide shots span both columns.
+function GalleryStage({ note, images }: Extract<Project["demo"], { kind: "gallery" }>) {
+  return (
+    <div>
+      <div className="mb-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+        <p className={`text-accent ${mono}`}>Screenshots</p>
+        <p className="max-w-[60ch] text-paper/60">{note}</p>
+      </div>
+      <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {images.map((img, i) => (
+          <li key={img.src} className={`overflow-hidden rounded-sm surface bg-s2 ${img.wide ? "md:col-span-2" : ""}`}>
+            <Image
+              src={img.src}
+              alt={img.alt}
+              width={img.width}
+              height={img.height}
+              priority={i === 0}
+              sizes={img.wide ? "(min-width: 768px) 90vw, 100vw" : "(min-width: 768px) 45vw, 100vw"}
+              className="h-auto w-full"
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function DemoStage({ project }: { project: Project }) {
+  if (project.demo.kind === "gallery") return <GalleryStage {...project.demo} />;
   if (project.demo.kind === "embed") return <DualSightEmbed src={project.demo.src} origin={project.demo.origin} note={project.demo.note} />;
   return project.demo.kind === "confidential" ? <ConfidentialStage /> : <PlaceholderStage project={project} />;
 }

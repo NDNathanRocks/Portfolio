@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useId, useState, type CSSProperties, type ReactNode } from "react";
 
 // Looping drawings of what each project does, shown on its corridor card while that card is in focus. Pure SVG + CSS
 // (see `.pv` in globals.css): no iframes, no assets, nothing fetched. Every drawing's resting state is its finished
@@ -46,6 +46,46 @@ function DualSight() {
         ))}
         <Label x={380} y={96} anchor="end" className="pv-up font-mono" style={at(3.1)}>7.3 ms cache hit ✓</Label>
       </g>
+    </Svg>
+  );
+}
+
+// Extend mode: one wave flows across a landscape and a portrait screen, under the desktop icons, with music bars below.
+function Wavelit() {
+  const clip = `wl${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+  const screens = [
+    { x: 40, y: 34, w: 190, h: 106 },
+    { x: 248, y: 14, w: 80, h: 142 },
+  ];
+  const wave = (y: number) => `M40 ${y} C 90 ${y - 26}, 130 ${y + 26}, 180 ${y} S 270 ${y - 26}, 328 ${y}`;
+  const bars = [10, 16, 24, 14, 20, 28, 18, 12, 22, 16];
+  return (
+    <Svg>
+      <defs>
+        <clipPath id={clip}>
+          {screens.map((s) => (
+            <rect key={s.x} x={s.x} y={s.y} width={s.w} height={s.h} rx={3} />
+          ))}
+        </clipPath>
+      </defs>
+      {screens.map((s) => (
+        <rect key={s.x} x={s.x} y={s.y} width={s.w} height={s.h} rx={3} opacity={0.7} />
+      ))}
+      <g className={HI}>
+        <g clipPath={`url(#${clip})`}>
+          <g className="pv-ol pv-grow" style={at(0.3, 2.2)}>
+            <path d={wave(78)} strokeWidth={2} />
+            <path d={wave(92)} opacity={0.5} />
+          </g>
+        </g>
+        {bars.map((h, i) => (
+          <rect key={i} x={56 + i * 16} y={132 - h} width={8} height={h} fill="currentColor" stroke="none" opacity={0.55} className="pv-ob pv-eq" style={at(2.6 + (i % 4) * 0.12)} />
+        ))}
+      </g>
+      {[46, 64, 82].map((y) => (
+        <rect key={y} x={48} y={y} width={10} height={10} rx={2} fill="currentColor" stroke="none" opacity={0.35} />
+      ))}
+      <Label x={288} y={168} anchor="middle" dim className="pv-up font-mono" style={at(2.4)}>ONE CANVAS</Label>
     </Svg>
   );
 }
@@ -176,6 +216,7 @@ function Rfp() {
 
 const previews: Record<string, () => ReactNode> = {
   dualsight: DualSight,
+  wavelit: Wavelit,
   clarity: Clarity,
   binit: BinIt,
   smile: Smile,
