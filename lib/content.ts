@@ -15,7 +15,12 @@ export type Demo =
   | { kind: "client"; note: string }
   | { kind: "iframe"; note: string; src?: string }
   | { kind: "embed"; note: string; src: string; origin: string }
-  | { kind: "gallery"; note: string; images: { src: string; alt: string; width: number; height: number; wide?: boolean }[] }
+  | {
+      kind: "gallery";
+      note: string;
+      video?: { av1: string; mp4: string; poster: string; label: string; width: number; height: number };
+      images: { src: string; alt: string; width: number; height: number; wide?: boolean }[];
+    }
   | { kind: "confidential" };
 
 export type Project = {
@@ -34,6 +39,8 @@ export type Project = {
   titleClass: string;
   demo: Demo;
   impact?: Metric[];
+  stats?: Metric[];
+  highlights?: string[];
 };
 
 export const projects: Project[] = [
@@ -65,7 +72,19 @@ export const projects: Project[] = [
     subtitle: "Live wallpaper app for Windows",
     meta: "2026 - Present · Built for the Microsoft Store",
     description:
-      "A Windows desktop app (~23,000 lines of C#, JavaScript and XAML) with 240+ unit tests and a GitHub Actions pipeline that builds, tests and packages the MSIX on every push. A Win32 wallpaper engine draws behind the desktop icons on Windows 10 and 11 (including 24H2), across monitors at different scales, with an \"extend\" mode that turns them into one shared canvas. Rendering suspends when the desktop is covered (GPU near zero) and an adaptive quality guard steps in when frames drop. It runs a WebGL2 shader runtime with 19 original GLSL shaders and WASAPI/FFT music visualizers. The AI Studio writes shaders through the Claude API (structured output, prompt caching, fallback), and every one passes a static check, a compile and a timed GPU benchmark before use. Pictures can also be generated on-device with SDXL-Lightning (ONNX Runtime / DirectML), each checked by a safety classifier.",
+      "GPU shaders and music visualizers behind the Windows desktop icons, across every monitor.",
+    highlights: [
+      "Draws behind the desktop icons on Windows 10 and 11 (incl. 24H2), across mixed-scale monitors",
+      "Pauses when covered, adaptive quality guard when frames drop",
+      "Music visualizers: WASAPI capture, FFT into 64 bands, beat detection",
+      "Claude API shader Studio: each shader checked, compiled and GPU-benchmarked before use",
+    ],
+    stats: [
+      { value: 23, prefix: "~", suffix: "k", label: "lines of C#, JS, XAML" },
+      { value: 240, suffix: "+", label: "unit tests" },
+      { value: 19, label: "original GLSL shaders" },
+      { value: 0, prefix: "~", suffix: "%", label: "GPU when covered" },
+    ],
     stack: ["C# / .NET 10", "WPF", "Win32 (P/Invoke)", "WebGL2 / GLSL", "WASAPI + FFT", "Claude API", "ONNX Runtime (DirectML)", "xUnit", "GitHub Actions + MSIX"],
     repo: "https://github.com/NDNathanRocks/WaveLit",
     from: "#2dd4bf",
@@ -75,7 +94,15 @@ export const projects: Project[] = [
     titleClass: "text-[clamp(3rem,7vw,6.5rem)]",
     demo: {
       kind: "gallery",
-      note: "Wavelit is a Windows desktop app, so it can't run in a browser. These screenshots are from the repo.",
+      note: "Recorded on my desktop: the overlays move with the music (sound off here). Screenshots below are from the repo.",
+      video: {
+        av1: "/projects/wavelit/wavelit-demo.av1.mp4",
+        mp4: "/projects/wavelit/wavelit-demo.mp4",
+        poster: "/projects/wavelit/wavelit-demo-poster.webp",
+        label: "Wavelit running behind the desktop icons: a moonlit lake, then a swirling nebula, with music-reactive constellation overlays",
+        width: 1920,
+        height: 1080,
+      },
       images: [
         { src: "/projects/wavelit/hero.webp", alt: "Wavelit: live wallpapers for Windows", width: 1600, height: 600, wide: true },
         { src: "/projects/wavelit/neon-bars.webp", alt: "Neon Bars music visualizer", width: 960, height: 540 },

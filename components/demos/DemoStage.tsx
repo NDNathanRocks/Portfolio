@@ -2,7 +2,8 @@
 
 import Magnetic from "@/components/Magnetic";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import useReduced from "@/lib/useReduced";
 import { motion } from "framer-motion";
 import type { Project } from "@/lib/content";
 import { demoRegistry } from "./registry";
@@ -96,13 +97,63 @@ function PlaceholderStage({ project }: { project: Project }) {
 }
 
 // Desktop apps can't run in a browser, so show real screenshots instead of a fake demo. Wide shots span both columns.
-function GalleryStage({ note, images }: Extract<Project["demo"], { kind: "gallery" }>) {
+type Gallery = Extract<Project["demo"], { kind: "gallery" }>;
+
+// Muted loop that only plays while on screen. With reduced motion it never autoplays: poster + native controls instead.
+function DemoVideo({ video }: { video: NonNullable<Gallery["video"]> }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const reduced = useReduced();
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (reduced) {
+      el.pause();
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduced]);
+
+  return (
+    <video
+      ref={ref}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      controls={reduced}
+      poster={video.poster}
+      width={video.width}
+      height={video.height}
+      aria-label={video.label}
+      className="h-auto w-full bg-s2"
+    >
+      <source src={video.av1} type='video/mp4; codecs="av01.0.09M.08"' />
+      <source src={video.mp4} type="video/mp4" />
+    </video>
+  );
+}
+
+function GalleryStage({ note, images, video }: Gallery) {
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-        <p className={`text-accent ${mono}`}>Screenshots</p>
+        <p className={`text-accent ${mono}`}>{video ? "In action" : "Screenshots"}</p>
         <p className="max-w-[60ch] text-paper/60">{note}</p>
       </div>
+      {video && (
+        <div className="mb-4 overflow-hidden rounded-sm surface">
+          <DemoVideo video={video} />
+        </div>
+      )}
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {images.map((img, i) => (
           <li key={img.src} className={`overflow-hidden rounded-sm surface bg-s2 ${img.wide ? "md:col-span-2" : ""}`}>
@@ -111,7 +162,7 @@ function GalleryStage({ note, images }: Extract<Project["demo"], { kind: "galler
               alt={img.alt}
               width={img.width}
               height={img.height}
-              priority={i === 0}
+              priority={i === 0 && !video}
               sizes={img.wide ? "(min-width: 768px) 90vw, 100vw" : "(min-width: 768px) 45vw, 100vw"}
               className="h-auto w-full"
             />

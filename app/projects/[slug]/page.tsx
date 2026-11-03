@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import DemoStage from "@/components/demos/DemoStage";
 import ImpactPanel from "@/components/demos/ImpactPanel";
+import StatStrip from "@/components/demos/StatStrip";
 import { getProject, projects } from "@/lib/content";
 
 type Params = { slug: string };
@@ -67,6 +68,18 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             <p className="mt-8 max-w-[70ch] text-lg text-soft">{project.description}</p>
           </Enter>
         )}
+        {project.highlights && (
+          <Enter step={3}>
+            <ul className="mt-6 grid max-w-[110ch] gap-x-10 gap-y-3 text-soft md:grid-cols-2">
+              {project.highlights.map((h) => (
+                <li key={h} className="flex gap-3">
+                  <span aria-hidden className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                  <span>{h}</span>
+                </li>
+              ))}
+            </ul>
+          </Enter>
+        )}
         {(project.liveUrl || project.repo) && (
           <Enter step={4}>
             <div className="mt-8 flex flex-wrap gap-4">
@@ -98,6 +111,12 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           </Enter>
         )}
       </header>
+
+      {project.stats && (
+        <div className="mb-20">
+          <StatStrip stats={project.stats} />
+        </div>
+      )}
 
       {project.impact && (
         <div className="mb-20">
